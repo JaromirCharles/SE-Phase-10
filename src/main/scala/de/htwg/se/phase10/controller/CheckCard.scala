@@ -19,6 +19,7 @@ object CheckCard {
       if (x.name.equals(name) && i == 1) { 
         if (Deck.cards == 0) {
           Deck.cards = Stack.stack.drop(1)
+          Deck.cards = scala.util.Random.shuffle(Deck.cards)
           Stack.stack = Stack.stack.take(1)
         }
         ret = x.takeFromDeck(Deck.cards)

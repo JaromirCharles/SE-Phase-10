@@ -33,4 +33,15 @@ object CheckPlayer {
     }
     return getPlayerList
   }
+  
+  def checkPlayerOption(input:Int) : Boolean = {
+    if (input >= 1 && input <= 3) return true
+    return false
+  }
+  
+  def getHandCards(name:String) : String = {
+    var handAsString = ""
+    for (x <- playerList)  if (x.name.equals(name)) handAsString = x.hand.mkString(", ")
+    return handAsString;
+  }
 }

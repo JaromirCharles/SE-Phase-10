@@ -4,12 +4,16 @@ import scala.collection.mutable.ListBuffer
 class Player(playerName: String) {
   val name:String = playerName
   var phase : Phase = Phase1
-  private val handHelp = Deck.cards.take(10)
   var hand = new ListBuffer[Card]()
   var break = false
-  Deck.cards = Deck.cards.drop(10)
   
-  for(x <- handHelp) {hand += x}
+  def getHandCard() {
+     hand.clear()
+     val handHelp = Deck.cards.take(10)
+     for(x <- handHelp) {hand += x}
+     Deck.cards = Deck.cards.drop(10)
+  }
+  
   private def setState(p:Phase) {
     this.phase = p
   }

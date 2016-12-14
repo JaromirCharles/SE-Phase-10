@@ -35,27 +35,53 @@ object helperMethods {
   }
   
   def playerOptions() : Int = {
-    var bool = true;
-    while (true) {
-      println("Drücke ... \n(1) um deine Handkarten anzeigen zu lassen\n(2) um deine Phase abzulegen\n(3) um eine Karte auf den Ablagestapel zu legen und deinen Zug zu beenden\n")
-      print("(4) um einen Spieler zu stoppen und deinen Zug zu beenden\n") 
+    var bool = true; var input = 0;
+    while (bool) {
+      println("Drücke ... \n(1) um deine Phase abzulegen\n(2) um an eine Phase anzulegen\n(3) um deinen Zug zu beenden")
+      try { input = scala.io.StdIn.readInt(); if(!checkPlayerOption(input)) println("Nur Zahlen im Bereich von 1 - 3 eingeben!\n")
+      } catch { case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - 3 eingeben!\n") }
     }
-    return 0;
+    return input;
+  }
+  
+  def matchCase(name:String,i:Int) {
+    i match {
+      case 1 =>  
+      case 2 =>
+      case 3 => finishTurn(name)
+    }
+  }
+  
+  def finishTurn(name:String) {
+    var bool = true; var input = 0;
+    while (bool) { 
+      println("Drücke ... \n(1) um eine Karte auf den Ablagestapel zu legen und deinen zug zu beenden")
+      println("(2) um einen Spieler zu stoppen und deinen Zug zu beenden")
+      try { input = scala.io.StdIn.readInt(); if(!checkGetCard(input)) println("Nur Zahlen im Bereich von 1 - 2 eingeben!\n")
+      } catch { case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - 2 eingeben!\n") }
+    }
+    input match  {
+      case 1 => 
+      case 2 =>
+    }
   }
 }
 
 class Tui () {
 	helperMethods.nameOfPlayer()
 	println("Alle Mitspieler: " + getPlayerList())
-	println("Der Ablagestapel: " + getStack())
 	
 	var boolRound = true
 	while (boolRound) {
 	  for (x<- getPlayer()) {
-	    println(x + " IST AM ZUG:\n")
+	    println(x.toUpperCase() + " IST AM ZUG:")
+	    println("Die Karten werden ausgegeben .... ")
+	    println("Der Ablagestapel: " + getStack())
+	    println(x + " deine Handkarten:\n" + getHandCards(x))
 	    var getCard = helperMethods.playerGetCard()
 	    println("Deine gezogene Karte: " + getGetCard(x,getCard))
-
+	    var getPlayerOption = helperMethods.playerOptions()
+	    helperMethods.matchCase(x,getPlayerOption)
 	  }
 	  boolRound = false
 	}
