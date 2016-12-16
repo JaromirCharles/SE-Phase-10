@@ -7,6 +7,10 @@ object Deck {
 
   private val jokerCards = (1 to 8).toList.map(cardindex => SpecialCard(CardType.Joker))
   private val breakCards = (1 to 4).toList.map(cardindex => SpecialCard(CardType.Break))
-  var cards:List[Card] = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
+  var cards:List[Card] = Nil
+  
+  def createShuffleDeck() {
+    cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
+  }
 }
 

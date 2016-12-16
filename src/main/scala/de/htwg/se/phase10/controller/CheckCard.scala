@@ -1,7 +1,11 @@
 package de.htwg.se.phase10.controller
 import de.htwg.se.phase10.model.Stack
 import de.htwg.se.phase10.model.Deck
-import de.htwg.se.phase10.model.PlayerList
+import de.htwg.se.phase10.model.Player
+import de.htwg.se.phase10.model.CardType.Break
+import de.htwg.se.phase10.model.PlayerList._
+import de.htwg.se.phase10.model.SpecialCard
+
 
 object CheckCard {
   def getStack() : String = {
@@ -15,7 +19,7 @@ object CheckCard {
   
   def getGetCard(name : String,i : Int) : String = {
     var ret = ""
-    for (x<- PlayerList.playerList) {
+    for (x<- playerList) {
       if (x.name.equals(name) && i == 1) { 
         if (Deck.cards == 0) {
           Deck.cards = Stack.stack.drop(1)
@@ -29,5 +33,38 @@ object CheckCard {
 
     }
     return ret
+  }
+  
+  def createDeckStack() {
+    Deck.createShuffleDeck()
+    Stack.createStack()
+  }
+  
+  def checkBreakCard(name:String) : Boolean = {
+    for (x<- playerList) {
+      if(name.equals(x.name)) {
+        for (y <- x.hand) {
+          y match {
+            case break:SpecialCard if (break.typeCard.equals(Break)) => x.hand -= break; return true;
+            case default =>
+          }
+        }
+      }
+    }
+    return false;
+  }
+  
+  def getIndexCardList(name:String) : String = {
+    var s = ""
+    var i = 0
+    for(x <- playerList) {
+      if (x.name.equals(name)) {
+        for(y <- x.hand) {
+          i += 1
+          s += "("+i+") "+ y +"\n"
+        }
+      }
+    }
+    return s
   }
 }

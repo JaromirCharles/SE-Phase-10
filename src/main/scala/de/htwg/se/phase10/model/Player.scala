@@ -4,9 +4,9 @@ import scala.collection.mutable.ListBuffer
 class Player(playerName: String) {
   val name:String = playerName
   var phase : Phase = Phase1
+  var checkPhase = 1
   var hand = new ListBuffer[Card]()
   var break = false
-  
   def getHandCard() {
      hand.clear()
      val handHelp = Deck.cards.take(10)
@@ -41,11 +41,6 @@ class Player(playerName: String) {
   def dropToStack(card:Card) {
     hand -= card
     Stack.stack = Stack.stack.::(card)
-  }
-  
-  def breakToPlayer(card:Card, name:Player) {
-    name.break = true
-    hand -= card
   }
   
   override def toString: String = 
