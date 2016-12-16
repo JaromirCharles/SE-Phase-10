@@ -73,6 +73,7 @@ class Tui () {
 	
 	var boolRound = true
 	while (boolRound) {
+<<<<<<< HEAD
 	  println("Die Karten werden ausgegeben .... ")
 	  for(x<- getPlayer()) givePlayerHandCards(x)
 	  for (x<- getPlayer()) {
@@ -82,6 +83,15 @@ class Tui () {
 	    var getCard = helperMethods.playerGetCard()
 	    println("Deine gezogene Karte: " + getGetCard(x,getCard))
 	    println(x + " deine Handkarten:\n" + getHandCards(x))
+=======
+	  for (x<- getPlayer()) {
+	    println(x.toUpperCase() + " IST AM ZUG:")
+	    println("Die Karten werden ausgegeben .... ")
+	    println("Der Ablagestapel: " + getStack())
+	    println(x + " deine Handkarten:\n" + getHandCards(x))
+	    var getCard = helperMethods.playerGetCard()
+	    println("Deine gezogene Karte: " + getGetCard(x,getCard))
+>>>>>>> branch 'master' of https://github.com/JaromirCharles/SE-Phase-10.git
 	    var getPlayerOption = helperMethods.playerOptions()
 	    helperMethods.matchCase(x,getPlayerOption)
 	  }

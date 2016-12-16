@@ -24,7 +24,9 @@ object CheckCard {
         }
         ret = x.takeFromDeck(Deck.cards)
       } else if (x.name.equals(name) && i ==2 && Stack.stack.size > 0) ret = x.takeFromStack(Stack.stack)
+
       else if (x.name.equals(name) && i ==2 && Stack.stack.size == 0) ret = "Ablagestapel ist gerade leer, daher muss vom Deck gezogen werden! " + x.takeFromDeck(Deck.cards)
+
     }
     return ret
   }

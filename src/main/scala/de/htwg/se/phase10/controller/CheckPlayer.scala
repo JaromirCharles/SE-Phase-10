@@ -38,11 +38,11 @@ object CheckPlayer {
     if (input >= 1 && input <= 3) return true
     return false
   }
-  
+
   def givePlayerHandCards(name:String){
     for (x <- playerList) if(x.name.equals(name)) x.getHandCard()
   }
-  
+
   def getHandCards(name:String) : String = {
     var handAsString = ""
     for (x <- playerList)  if (x.name.equals(name)) handAsString = x.hand.mkString(", ")

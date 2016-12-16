@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 htwg-scala-seed
 =========================
 
@@ -8,3 +9,9 @@ class Software Engineering at the University of Applied Science HTWG Konstanz
 * Has *ScalaTest* and *ScalaMock* at their latest versions as dependencies.
 * Has *sbt-scalariform*, *sbt-scapegoat*, *scalastyle-sbt-plugin* and *sbt-scoverage* sbt plugins
 * Has .gitignore defaults
+=======
+# SE-Phase-10
+Implementation of the game 'Phase-10' in scala
+
+Setting up GitHub
+>>>>>>> branch 'master' of https://github.com/JaromirCharles/SE-Phase-10.git
