@@ -85,9 +85,9 @@ object CheckPlayer {
       for (x <- playerList) {
         if(name.equals(x.name) && !x.break) {
           x.break = true
+          return true
         }
       }
-      return true
     }
     return false
   }

@@ -87,13 +87,14 @@ object helperMethods {
     if (!checkBreakCard(name)) {
       println(name + " du hast kein Stopper auf der Hand, somit kannst du auch niemanden stoppen!")
       finishTurn(name);
-    }
-    var input = 0;
-    var bool = true
-    println("Wählen Sie den Spieler aus der gestoppt werden soll:\n" + getStopPlayerList(name))
-    while (bool) {
-      try { input = scala.io.StdIn.readInt(); if(!checkPlayerStop(input)) println("Spieler konnte nicht gestoppt werden!\n") else bool = false
-      } catch {case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - " + (getPlayer().size - 1).toString() +" eingeben!\n")} 
+    } else {
+      var input = 0;
+      var bool = true
+      println("Wählen Sie den Spieler aus der gestoppt werden soll:\n" + getStopPlayerList(name))
+      while (bool) {
+        try { input = scala.io.StdIn.readInt(); if(!checkPlayerStop(input)) {println("Spieler konnte nicht gestoppt werden!\n");stopPlayer(name); }else bool = false
+        } catch {case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - " + (getPlayer().size - 1).toString() +" eingeben!\n")} 
+      }
     }
   }
 }
