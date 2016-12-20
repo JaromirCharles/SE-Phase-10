@@ -1,6 +1,6 @@
 package de.htwg.se.phase10.model
 
-object Stack {
+object Stack extends iStack{
   var stack:List[Card] = Nil
   
   def createStack() {

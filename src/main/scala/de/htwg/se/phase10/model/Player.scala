@@ -1,7 +1,7 @@
 package de.htwg.se.phase10.model
 import scala.collection.mutable.ListBuffer
 
-class Player(playerName: String) {
+class Player(playerName: String) extends iPlayer {
   val name:String = playerName
   var phase : Phase = Phase1
   var checkPhase = 1

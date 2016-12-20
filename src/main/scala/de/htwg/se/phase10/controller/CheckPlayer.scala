@@ -49,17 +49,6 @@ object CheckPlayer {
     return handAsString;
   }
   
-  def getPhase(nameList : ListBuffer[String]) : Int = {
-    var phaseList = new ListBuffer[Int]
-    for (x <- nameList) {
-      for (y <- playerList) {
-        if (x.equals(y.name)) 
-          phaseList += y.checkPhase
-      }
-    }
-      return phaseList.max
-  }
-  
   def checkBreak(name:String) : Boolean = {
     for (x<-playerList) if(name.equals(x.name) && x.break) return true
     return false
@@ -104,5 +93,45 @@ object CheckPlayer {
           x.dropToStack(x.hand(i-1))
         }
     }
+  }
+  
+  def getPhase(name:String) : String = {
+    var ret = ""
+    for (x <- playerList) {
+        if(name.equals(x.name)) {
+          x.checkPhase match {
+            case 1 => ret = "2 Drillinge"
+            case 2 => ret = "1 Drilling + 1 Viererfolge"
+            case 3 => ret = "1 Vierling + 1 Viererfolge"
+            case 4 => ret = "1 Siebenerfolge"
+            case 5 => ret = "1 Achterfolge"
+            case 6 => ret = "1 Neunerfolge"
+            case 7 => ret = "2 Vierlinge"
+            case 8 => ret = "7 Karten einer Farbe"
+            case 9 => ret = "1 Fünfling + 1 Zwilling"
+            case 10 => ret = "1 Fünfling + 1 Drilling"
+          }
+        }
+    }
+    return ret
+  }
+  
+  def getPhaseInt(name:String) : Int = {
+    var i = 1; 
+    for (x <- playerList) {
+        if(name.equals(x.name)) {
+          i = x.checkPhase
+        }
+     }
+    return i
+  }
+  
+  def playerFinishedRound(name:String) : Boolean = {
+     for (x <- playerList) {
+        if(name.equals(x.name) && x.hand.size == 0) {
+          return true
+        }
+     }
+    return false
   }
 }

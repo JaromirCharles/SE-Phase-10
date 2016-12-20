@@ -1,6 +1,6 @@
 package de.htwg.se.phase10.model
 
-object Deck {
+object Deck extends iDeck{
   private val colors = Array(Colors.Red, Colors.Green, Colors.Yellow, Colors.Purple)
   private val typ = 1 to 12
   private val normalCards = (1 to 2).flatMap(loop => colors.flatMap(color => (typ.map(i => NormalCard(color, i))))).toList

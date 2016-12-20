@@ -2,6 +2,7 @@ package de.htwg.se.phase10.tui
 import de.htwg.se.phase10.controller.CheckPlayer._
 import de.htwg.se.phase10.controller.CheckCard._
 import scala.util.control.Breaks._
+import scala.util.control._
 
 object helperMethods {
     def numberOfPlayer() : Int = {
@@ -97,32 +98,56 @@ object helperMethods {
       }
     }
   }
+  
+  def finishRound(name:String) = playerFinishedRound(name)
 }
 
 class Tui () {
 	helperMethods.nameOfPlayer()
 	println("Alle Mitspieler: " + getPlayerList())
-	while (getPhase(getPlayer()) != 10) {
-	  var bool = true
+	var gameBool = true
+	val gameBreak = new Breaks
+	gameBreak.breakable {
+	while (gameBool) {
+	  var boolTurn = true
 	  println("Deck wird gemischelt und Ablagestapel erzeugt ..." )
 	  createDeckStack()
 	  println("Die Karten werden ausgegeben .... ")
 	  for(x<- getPlayer()) givePlayerHandCards(x)
-	  while(bool) {
-	    for (x<- getPlayer()) {
-	      breakable{
-	        println("--------------------------------------------------------------")
-	        if (!helperMethods.yourTurn(x)) {setBreak(x); break;}
-	        println("Der Ablagestapel: " + getStack())
-	        println(x + " deine Handkarten:\n" + getHandCards(x))
-	        var getCard = helperMethods.playerGetCard()
-	        println("Deine gezogene Karte: " + getGetCard(x,getCard))
-	        println(x + " deine Handkarten:\n" + getHandCards(x))
-	        var playerOption = helperMethods.playerOptions()
-	        helperMethods.matchCase(x, playerOption)
+	  val roundBreak = new Breaks
+	  roundBreak.breakable{
+	  while(boolTurn) {
+	      for (x<- getPlayer()) {
+	        val stopBreak = new Breaks
+	        stopBreak.breakable{
+	          println("--------------------------------------------------------------")
+	          if (!helperMethods.yourTurn(x)) {setBreak(x); stopBreak.break;}
+	          println("Deine aktuelle Phase: " + getPhase(x))
+	          println("Der Ablagestapel: " + getStack())
+	          println(x + " deine Handkarten:\n" + getIndexCardList(x))
+	          var getCard = helperMethods.playerGetCard()
+	          println("Deine gezogene Karte: " + getGetCard(x,getCard))
+	          println(x + " deine Handkarten:\n" + getIndexCardList(x))
+	          var playerOption = helperMethods.playerOptions()
+	          helperMethods.matchCase(x, playerOption)
+	          if (helperMethods.finishRound(x) && getPhaseInt(x) != 10) {
+	            println("Runde ist vorbei...")
+              println("Spieler " + x + " hat alle Karten abgelegt!")
+              println("Phasenübersicht:")
+              println("--------------------------------------------------------------")
+	            roundBreak.break;
+	          }else if(helperMethods.finishRound(x) && getPhaseInt(x) == 10) {
+	              gameBool = false;
+	              println("--------------------------------------------------------------")
+	              println("Das Spiel ist vorbei!")
+	              println("DER GEWINNER IST " + x)
+	              gameBreak.break
+	            }
 	      }
 	    }
+	   }
     }
+	}
 	}
 }
 
