@@ -1,5 +1,5 @@
 package de.htwg.se.phase10.model
 
 trait Phase {
-  def movePhase(moveCards:List[Card]) : Any
+  def checkPhaseSize(cards:List[Card]) : Boolean
 }

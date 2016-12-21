@@ -79,7 +79,7 @@ object helperMethods {
   //gewählte Option vom Spieler wird ausgeführt
   def matchCase(name:String,i:Int) {
     i match {
-      case 1 =>println("hier1") 
+      case 1 =>checkPhase(name)
       case 2 =>println("hier2")
       case 3 =>finishTurn(name)
     }
@@ -163,6 +163,10 @@ object helperMethods {
   
   //Check ob spieler alle Karten abgelegt hat
   def finishRound(name:String) = playerFinishedRound(name)
+  
+  def checkPhase(name:String) {
+    val phase = getPhaseInt(name)
+  }
 }
 
 class Tui () {
