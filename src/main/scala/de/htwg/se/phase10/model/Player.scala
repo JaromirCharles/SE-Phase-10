@@ -19,7 +19,7 @@ class Player(playerName: String) extends iPlayer {
   }
   
   def move(moveCards:List[Card]) {
-    phase.movePhase(moveCards)
+    phase.checkPhaseSize(moveCards)
   }
 
   def takeFromDeck(card:List[Card]) : String = {

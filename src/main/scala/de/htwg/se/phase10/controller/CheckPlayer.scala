@@ -134,4 +134,10 @@ object CheckPlayer {
      }
     return false
   }
+  
+  def changePlayerList() {
+    var one = playerList.take(1)
+    playerList = playerList.drop(1)
+    playerList :+ one
+  }
 }
