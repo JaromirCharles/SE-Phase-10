@@ -95,25 +95,35 @@ object CheckPlayer {
     }
   }
   
-  def getPhase(name:String) : String = {
-    var ret = ""
+  def getPhase(name:String) : (String,Int) = {
+    var ret = ("",0)
     for (x <- playerList) {
         if(name.equals(x.name)) {
           x.checkPhase match {
-            case 1 => ret = "2 Drillinge"
-            case 2 => ret = "1 Drilling + 1 Viererfolge"
-            case 3 => ret = "1 Vierling + 1 Viererfolge"
-            case 4 => ret = "1 Siebenerfolge"
-            case 5 => ret = "1 Achterfolge"
-            case 6 => ret = "1 Neunerfolge"
-            case 7 => ret = "2 Vierlinge"
-            case 8 => ret = "7 Karten einer Farbe"
-            case 9 => ret = "1 Fünfling + 1 Zwilling"
-            case 10 => ret = "1 Fünfling + 1 Drilling"
+            case 1 => ret = ("2 Drillinge",6)
+            case 2 => ret = ("1 Drilling + 1 Viererfolge",7)
+            case 3 => ret = ("1 Vierling + 1 Viererfolge",8)
+            case 4 => ret = ("1 Siebenerfolge",7)
+            case 5 => ret = ("1 Achterfolge",8)
+            case 6 => ret = ("1 Neunerfolge",9)
+            case 7 => ret = ("2 Vierlinge",8)
+            case 8 => ret = ("7 Karten einer Farbe",7)
+            case 9 => ret = ("1 Fünfling + 1 Zwilling",7)
+            case 10 => ret = ("1 Fünfling + 1 Drilling",8)
           }
         }
     }
     return ret
+  }
+  
+  def addToMoveList(name:String,i:Int) {
+    for (x <- playerList) {
+        if(name.equals(x.name)) {
+          var card = x.hand(i-1)
+          x.hand -= card
+          x.addCard(card)
+        }
+    }
   }
   
   def getPhaseInt(name:String) : Int = {
@@ -139,5 +149,42 @@ object CheckPlayer {
     var one = playerList.take(1)
     playerList = playerList.drop(1)
     playerList :+ one
+  }
+  
+  def getMoveList(name:String) : String = {
+    var s = ""
+    for(x <- playerList) {
+      if (x.name.equals(name)) {
+        for(y <- x.moveList) {
+          s += " | " + y 
+        }
+      }
+    }
+    return s + " | "
+  }
+  
+  def movePhase(name:String) {
+    for(x <- playerList) {
+      if (x.name.equals(name)) 
+        x.move()
+    }
+  }
+  
+  def getMoved(name:String) : Boolean = {
+    var ret = false
+    for(x <- playerList) {
+      if (x.name.equals(name)) 
+        ret = x.moved
+    }
+    return ret
+  }
+  
+  def updateHand(name:String) {
+    for(x <- playerList) {
+      if (x.name.equals(name)) { 
+        x.hand ++= x.moveList
+        x.moveList.clear()
+      }
+    }
   }
 }
