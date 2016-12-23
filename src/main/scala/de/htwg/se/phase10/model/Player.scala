@@ -3,9 +3,11 @@ import scala.collection.mutable.ListBuffer
 
 class Player(playerName: String) extends iPlayer {
   val name:String = playerName
+  var moved = false
   var phase : Phase = Phase1
   var checkPhase = 1
   var hand = new ListBuffer[Card]()
+  var moveList = new ListBuffer[Card]()
   var break = false
   def getHandCard() {
      hand.clear()
@@ -14,12 +16,14 @@ class Player(playerName: String) extends iPlayer {
      Deck.cards = Deck.cards.drop(10)
   }
   
-  private def setState(p:Phase) {
+  def setState(p:Phase) {
     this.phase = p
   }
   
-  def move(moveCards:List[Card]) {
-    phase.checkPhaseSize(moveCards)
+  def addCard(card: Card) = moveList.append(card)
+  
+  def move() {
+    if (phase.checkPhaseSize(moveList.toList))  moved = true
   }
 
   def takeFromDeck(card:List[Card]) : String = {

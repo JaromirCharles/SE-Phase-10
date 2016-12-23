@@ -59,7 +59,7 @@ object helperMethods {
   }
   
   //Spieler optionen Phase ablegen, an eine Phase anlegen oder Zug beenden
-  def playerOptions() : Int = {
+  def playerOptions(name:String)  {
     var bool = true 
     var input = 0;
     while (bool) {
@@ -73,16 +73,45 @@ object helperMethods {
         case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - 3 eingeben!") 
       }
     }
-    return input;
+    matchCase(name,input);
   }
   
   //gewählte Option vom Spieler wird ausgeführt
   def matchCase(name:String,i:Int) {
     i match {
-      case 1 =>checkPhase(name)
+      case 1 =>movePhase(name)
       case 2 =>println("hier2")
       case 3 =>finishTurn(name)
     }
+  }
+  
+  def movePhase(name:String) {
+    println("Die Phase in korrekter Reihenfole eingeben!")
+    var phasenSize = getPhase(name)._2
+    while(phasenSize > 0) {
+      println("Abgegebene Karten:")
+      println(getMoveList(name))
+      println("Auswahl der Karten:")
+      println(getIndexCardList(name))
+      var size = getHandSize(name).toString()
+      try { 
+        var input = scala.io.StdIn.readInt()
+        if(!(input >= 1 && input <= getHandSize(name))) println("Nur Zahlen zwischen 1 - " + size + " eingeben!\n")
+        else { 
+          addToMoveList(name,input)
+          phasenSize -= 1
+        }
+      } catch {
+        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - " + size+" eingeben!\n")
+      } 
+    }
+    println(getMoveList(name))
+    if (getMoved(name)) {
+      println("Es hat geklappt")
+      updateHand(name)
+    }
+    else println("Es hat nicht geklappt")
+    playerOptions(name)
   }
   
   //Option Spieler beendet seinen Zug, entweder anderen Spieler stoppen oder eine Karte auf den Ablagestapel legen
@@ -163,10 +192,6 @@ object helperMethods {
   
   //Check ob spieler alle Karten abgelegt hat
   def finishRound(name:String) = playerFinishedRound(name)
-  
-  def checkPhase(name:String) {
-    val phase = getPhaseInt(name)
-  }
 }
 
 class Tui () {
@@ -189,14 +214,14 @@ class Tui () {
 	        stopBreak.breakable{
 	          println("--------------------------------------------------------------")
 	          if (!helperMethods.yourTurn(x)) {setBreak(x); stopBreak.break;} //Checken ob Spieler gestoppt sonst ist er am Zug
-	          println("Deine aktuelle Phase: " + getPhase(x))  //Anzeigen welche Phase er erledigen muss
+	          println("Deine aktuelle Phase: " + getPhase(x)._1)  //Anzeigen welche Phase er erledigen muss
 	          println("Der Ablagestapel: " + getStack())  //Anzeigen der ersten Karte auf dem Ablagestapel
 	          println(x + " deine Handkarten:\n" + getIndexCardList(x))  //Anzeigen der Handkarten von dem Spieler der an der Reihe ist
 	          var getCard = helperMethods.playerGetCard()  //Vom Deck oder Stapel ziehen
 	          println("Deine gezogene Karte: " + getGetCard(x,getCard)) //Ausgabe der gezogenen Karte
 	          println(x + " deine Handkarten:\n" + getIndexCardList(x))  //erneutes Anzeigen der Karten
-	          var playerOption = helperMethods.playerOptions()  //Optionen des Spielers
-	          helperMethods.matchCase(x, playerOption)  //Für was hat er sich entschieden
+	          helperMethods.playerOptions(x)  //Optionen des Spielers
+	          //helperMethods.matchCase(x, playerOption)  Für was hat er sich entschieden
 	          if (helperMethods.finishRound(x) && getPhaseInt(x) != 10) {  //Checken ob Spieler alle Karten abgelegt hat und in welcher Phase er ist
 	            println("Runde ist vorbei...")  //Falls er alle Karten abgelegt hat und noch nicht in der 10 Phase war wird eine neue Runde gestartet
               println("Spieler " + x + " hat alle Karten abgelegt!")
