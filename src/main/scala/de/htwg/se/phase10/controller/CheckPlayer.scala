@@ -1,10 +1,9 @@
 package de.htwg.se.phase10.controller
-import de.htwg.se.phase10.model.PlayerList.playerList
-import de.htwg.se.phase10.model.Player
+import de.htwg.se.phase10.model.impl.PlayerList.playerList
+import de.htwg.se.phase10.model.impl._
 import scala.collection.mutable.ListBuffer
 
 object CheckPlayer {
-  
   def checkAnzPlayer(anz : Int) : Boolean ={
     if (anz >= 2 && anz <= 4) return true
     return false
@@ -39,8 +38,8 @@ object CheckPlayer {
     return false
   }
 
-  def givePlayerHandCards(name:String){
-    for (x <- playerList) if(x.name.equals(name)) x.getHandCard()
+  def givePlayerHandCards(){
+    for (x <- playerList) x.createHand()
   }
 
   def getHandCards(name:String) : String = {
@@ -186,5 +185,12 @@ object CheckPlayer {
         x.moveList.clear()
       }
     }
+  }
+  
+  def movedPhase() : String = {
+    var s = ""
+    for (x <- playerList)
+      s += x.moveList.mkString(", \n")
+    return s + "hier"
   }
 }

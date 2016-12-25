@@ -1,10 +1,10 @@
 package de.htwg.se.phase10.controller
-import de.htwg.se.phase10.model.Stack
-import de.htwg.se.phase10.model.Deck
-import de.htwg.se.phase10.model.Player
-import de.htwg.se.phase10.model.CardType.Break
-import de.htwg.se.phase10.model.PlayerList._
-import de.htwg.se.phase10.model.SpecialCard
+import de.htwg.se.phase10.model.impl.Player
+import de.htwg.se.phase10.model.impl.PlayerList._
+import de.htwg.se.phase10.model.impl.Deck;
+import de.htwg.se.phase10.model.impl.Stack;
+import de.htwg.se.phase10.model.impl.CardType.Break;
+import de.htwg.se.phase10.model.impl.SpecialCard
 
 
 object CheckCard {
@@ -26,10 +26,10 @@ object CheckCard {
           Deck.cards = scala.util.Random.shuffle(Deck.cards)
           Stack.stack = Stack.stack.take(1)
         }
-        ret = x.takeFromDeck(Deck.cards)
-      } else if (x.name.equals(name) && i ==2 && Stack.stack.size > 0) ret = x.takeFromStack(Stack.stack)
+        ret = x.takeFromDeck().toString()
+      } else if (x.name.equals(name) && i ==2 && Stack.stack.size > 0) ret = x.takeFromStack().toString()
 
-      else if (x.name.equals(name) && i ==2 && Stack.stack.size == 0) ret = "Ablagestapel ist gerade leer, daher muss vom Deck gezogen werden! " + x.takeFromDeck(Deck.cards)
+      else if (x.name.equals(name) && i ==2 && Stack.stack.size == 0) ret = "Ablagestapel ist gerade leer, daher muss vom Deck gezogen werden! " + x.takeFromDeck()
 
     }
     return ret
