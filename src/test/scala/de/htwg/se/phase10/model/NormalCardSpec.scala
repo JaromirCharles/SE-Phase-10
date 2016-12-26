@@ -5,6 +5,8 @@ import org.scalatest.Matchers._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
+import de.htwg.se.phase10.modell.Colors;
+
 @RunWith(classOf[JUnitRunner])
 class NormalCardSpec extends WordSpec {
 
