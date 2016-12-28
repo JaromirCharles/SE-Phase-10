@@ -10,7 +10,9 @@ class Player(playerName: String) extends IPlayer {
   var checkPhase = 1
   var hand = new ListBuffer[Card]()
   var moveList = new ListBuffer[Card]()
-  var break = false
+  private var break = false
+  var pulledCard = false
+  var phaseLength = 0
 
   def createHand() {
      hand.clear()
@@ -37,6 +39,7 @@ class Player(playerName: String) extends IPlayer {
     val drawnCard = Deck.cards.head
     Deck.cards = Deck.cards.drop(1)
     hand += drawnCard
+    pulledCard = true
     return drawnCard
   }
   
@@ -44,12 +47,15 @@ class Player(playerName: String) extends IPlayer {
     val drawnCard = Stack.stack.head
     hand += drawnCard
     Stack.stack = Stack.stack.drop(1)
+    pulledCard = true
     return drawnCard
   }
   
-  override def dropToStack(card:Card) {
+  override def dropToStack(card:Card) : Card = {
     hand -= card
     Stack.stack = Stack.stack.::(card)
+    pulledCard = false
+    card
   }
   
   override def toString: String =  name

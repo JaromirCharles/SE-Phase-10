@@ -29,29 +29,16 @@ object CardWorksheet {
 	}                                         //> checkColor: (card: de.htwg.se.phase10.model.impl.Card)Unit
 	normal.getRank                            //> res0: Int = 10
 	specialBreak.getRank                      //> res1: de.htwg.se.phase10.model.impl.CardType.Value = Break
-	
-	var con = new Controller()                //> con  : de.htwg.se.phase10.controller.impl.Controller = de.htwg.se.phase10.co
-                                                  //| ntroller.impl.Controller@5afa04c
-	con.createPlayer("maxi")                  //> res2: Boolean = true
-	con.createPlayer("jaromir")               //> res3: Boolean = true
-	con.createPlayer("maxi")                  //> res4: Boolean = false
- 	
- 	con.createStackDeck()
- 	con.givePlayerHandCards()
- 	con.getHand("maxi")                       //> res5: String = "(1) Red 11
-                                                  //| (2) Green 1
-                                                  //| (3) Green 5
-                                                  //| (4) Purple 5
-                                                  //| (5) Yellow 7
-                                                  //| (6) Blau Break
-                                                  //| (7) Purple 1
-                                                  //| (8) Blau Joker
-                                                  //| (9) Green 9
-                                                  //| (10) Purple 7
-                                                  //| "
-con.getBreak("jaromir")                           //> res6: Boolean = false
-con.setBreak("jaromir")
-con.getBreak("jaromir")                           //> res7: Boolean = true
+var strig = "33"                                  //> strig  : String = 33
+strig.substring(1).equals("3")                    //> res2: Boolean = true
+strig.length()                                    //> res3: Int = 2
 
-con.finishedRound("maxi")                         //> res8: Boolean = false
+var contr = new Controller()                      //> contr  : de.htwg.se.phase10.controller.impl.Controller = de.htwg.se.phase10.
+                                                  //| controller.impl.Controller@4de8b406
+var index = 2                                     //> index  : Int = 2
+contr.createPlayer("horst")
+contr.createPlayer("helmut")
+contr.getPlayerTurn()(index - 1)                  //> res4: String = helmut
+contr.setBreak(contr.getPlayerTurn()(1))
+contr.getBreak(contr.getPlayerTurn()(index-1))    //> res5: Boolean = true
 }

@@ -7,10 +7,16 @@ import de.htwg.se.phase10.util.Observer.IObservable
 trait IController extends IObservable{
   
   //starts new game
-  def newGame()
+  def newGame(bool:Boolean)
+  
+  //checks if new game started
+  def checkNewGame() : Boolean
   
   //quits the game
   def quitGame()
+  
+  //returns status of the game 
+  def getStatus() : GameStatus.Value
   
   //creates Deck and Stack
   def createStackDeck() 
@@ -18,11 +24,13 @@ trait IController extends IObservable{
   //returns first Card of the Stack
   def getStack() : String
   
-  //Number of Player 
-  def checkNumberPlayer(number : Int) : Boolean
-  
   //Create a new Player and adds him\her to playerList
-  def createPlayer(name:String) : Boolean
+  def createPlayer(name:String)
+  
+  //returns name of player
+  def getName() : String
+  
+  def getPlayer() : Player
   
   //returns all Players as String
   def getPlayerList() : String
@@ -34,40 +42,55 @@ trait IController extends IObservable{
   def getPlayerTurn() : ListBuffer[String]
   
   //get Hand of the player
-  def getHand(name:String) : String
+  def getHand() : String
   
   //returns the moveList of every player 
   def getMoveList() : String
   
   //returns the moveList of the player moving the phase
-  def getPlayerMoveList(name:String) : String
+  def getPlayerMoveList() : String
   
-  //adds a card to moveList
-  def addToMoveList(name:String, index:Int)
+  //adds a card to 
+  def addToMoveList(index:Int)
   
   //moves the phase
-  def movePhase(name:String)
+  def movePhase()
   
   //checks if the player did the phase already 
-  def getMove(name:String) : Boolean
+  def getMove() : Boolean
+  
+  //returns size of hand
+  def getHandSize() : Int
   
   //gives the player his card if the phase failed
-  def updateHand(name:String)
+  def updateHand()
+  
+  //sets the playerNumber 
+  def setPlayerNumber()
+  
+  //returns playerNumber
+  def getPlayerNumber() : Int
   
   //gets a Card from the Deck
-  def getCardDeck(name:String) : String
+  def getCardDeck() : String
   
   //gets a Card from the Stack
-  def getCardStack(name:String) : String
+  def getCardStack() : String
   
   //puts a Card from his hand to the stack
-  def dropCardStack(name:String, index:Int) 
+  def dropCardStack(index:Int) : String
   
   //returns the name of the phase and the number of cards he needs as tuple
-  def getPhaseNameNumber(name:String) : (String,Int)
+  def getPhaseNameNumber() : (String,Int)
   
   //Checks if a player is already stopped returns true if he is stopped false if not
-  def checkPlayerStopped(index:Int) : Boolean
+  def stopPlayer(index:Int)
+  
+  //checks if player already pulled a card
+  def getPullCard() : Boolean
+  
+  //gets the next player
+  def skipPlayer(name:String)
   
   //checks if player is stopped
   def getBreak(name:String) : Boolean
@@ -75,19 +98,25 @@ trait IController extends IObservable{
   //stops a player if he is not stopped yet
   def setBreak(name:String)
   
+  //checks if player has break card and removes it 
+  def checkRemoveBreak() : Boolean
+  
   //set Phase at the end of the round
   def setNextPhase()
   
   //checks if Player finished Round
-  def finishedRound(name:String) : Boolean
+  def finishedRound() : Boolean
   
   //checks if Player finished Game
-  def finishedGame(name:String) : Boolean
+  def finishedGame() : Boolean
   
   //start a new Round
   def startNewRound()
   
   //get Variable Round
   def getRoundOver() : Boolean
+  
+  //checks if game is over
+  def getGameOver() : Boolean
   
 }

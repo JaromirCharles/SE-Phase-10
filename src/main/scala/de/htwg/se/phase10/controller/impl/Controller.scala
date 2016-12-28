@@ -4,10 +4,11 @@ import de.htwg.se.phase10.model.impl.Deck
 import de.htwg.se.phase10.model.impl.Card
 import de.htwg.se.phase10.model.impl.Stack
 import de.htwg.se.phase10.model.impl.Player
+import de.htwg.se.phase10.controller.PlayerStopped
 import de.htwg.se.phase10.model.impl._
 import de.htwg.se.phase10.model.impl.PlayerList.playerList
 import de.htwg.se.phase10.controller.GameStatus
-import de.htwg.se.phase10.controller.ExitGameEvent
+import de.htwg.se.phase10.controller.ExitGame
 import de.htwg.se.phase10.controller.UpdateStack
 import de.htwg.se.phase10.controller.StartGame
 import de.htwg.se.phase10.controller.AddPlayer
@@ -21,17 +22,27 @@ class Controller extends Observable with IController {
   private var roundOver = false
   private var gameOver = false
   private var gameStatus = GameStatus.Welcome
+  private var newGameValue = false
+  private var playerNumber = 0
+  private var countPlayer = 0
   
-  override def newGame() {
-    notifyObservers(new StartGame())
-    createStackDeck()
-    gameStatus = GameStatus.NewGame
+  override def newGame(bool:Boolean) {
+    newGameValue = bool
+    if (newGameValue) {
+      notifyObservers(new StartGame())
+      createStackDeck()
+      gameStatus = GameStatus.NewGame
+    }
   }
+  
+  override def checkNewGame() = newGameValue
   
   override def quitGame() {
-    notifyObservers(new ExitGameEvent())
+    notifyObservers(new ExitGame())
     gameStatus = GameStatus.ExitGame
   }
+  
+  override def getStatus() = gameStatus
   
   override def createStackDeck() {
     Deck.createShuffleDeck
@@ -40,18 +51,22 @@ class Controller extends Observable with IController {
     gameStatus = GameStatus.NewStack
   }
   
-  override def getStack() = Stack.getTopCard().toString()
+  override def getStack() : String = {
+    if (Stack.stackSize == 0) {
+      return "---- Empty ----"
+    }
+    Stack.getTopCard().toString()
+  }
   
-  override def checkNumberPlayer(number:Int) = if (number >= 2 && number <= 4) true else false
-  
-  override def createPlayer(name:String) : Boolean = {
-    for (x <- playerList) if (x.name.equals(name)) return false
-    playerList += new Player(name) 
+  override def createPlayer(name:String)  {
+    playerList += new Player(name)
+    countPlayer += 1
     gameStatus = GameStatus.AddPlayer
     notifyObservers(new AddPlayer())
-    return true
   }
- 
+  
+  override def getName() = getPlayer().name
+  
   override def getPlayerTurn() : ListBuffer[String] = {
     var getPlayerList = new ListBuffer[String]()
     for (x <- playerList) {
@@ -72,136 +87,155 @@ class Controller extends Observable with IController {
   
   override def givePlayerHandCards() = for (player <- playerList) player.createHand()
   
-  override def getHand(name:String) : String = {
+  override def getHand() : String = {
     var returnString = ""
     var index = 0
-    for (player <- playerList) if (player.name.equals(name)) {
-      for (card <- player.hand) {
-        index += 1
-        returnString += "("+index+") " + card + "\n"
-      }
+    var player = playerList(this.playerNumber)
+    for (card <- player.hand) {
+      index += 1
+      returnString += "("+index+") " + card + "\n"
     }
     returnString
   }
   
-  override def getPhaseNameNumber(name:String) : (String,Int) = {
+  override def getHandSize() = getPlayer.handSize
+  
+  override def getPhaseNameNumber() : (String,Int) = {
     var returnTuple = ("",0)
-    for (player <- playerList) {
-      if(name.equals(player.name)) {
-        player.checkPhase match {
-            case 1 => returnTuple = ("2 Drillinge",6)
-            case 2 => returnTuple = ("1 Drilling + 1 Viererfolge",7)
-            case 3 => returnTuple = ("1 Vierling + 1 Viererfolge",8)
-            case 4 => returnTuple = ("1 Siebenerfolge",7)
-            case 5 => returnTuple = ("1 Achterfolge",8)
-            case 6 => returnTuple = ("1 Neunerfolge",9)
-            case 7 => returnTuple = ("2 Vierlinge",8)
-            case 8 => returnTuple = ("7 Karten einer Farbe",7)
-            case 9 => returnTuple = ("1 Fünfling + 1 Zwilling",7)
-            case 10 => returnTuple = ("1 Fünfling + 1 Drilling",8)
-          }
-        }
+    var player = getPlayer()
+    player.checkPhase match {
+      case 1 => returnTuple = ("2 Drillinge",6)
+      case 2 => returnTuple = ("1 Drilling + 1 Viererfolge",7)
+      case 3 => returnTuple = ("1 Vierling + 1 Viererfolge",8)
+      case 4 => returnTuple = ("1 Siebenerfolge",7)
+      case 5 => returnTuple = ("1 Achterfolge",8)
+      case 6 => returnTuple = ("1 Neunerfolge",9)
+      case 7 => returnTuple = ("2 Vierlinge",8)
+      case 8 => returnTuple = ("7 Karten einer Farbe",7)
+      case 9 => returnTuple = ("1 Fünfling + 1 Zwilling",7)
+      case 10 => returnTuple = ("1 Fünfling + 1 Drilling",8)
     }
     return returnTuple
   }
   
   override def getMoveList() : String = {
     var returnString = ""
-    for (player <- playerList) returnString += player.name + ": " + player.moveList.mkString(" ,\n")
+    var number = 0
+    for (player <- playerList) {
+      if(player.moved) {
+        returnString += player.name + ": " + player.moveList.mkString(" ,")+"\n"
+        number += 1
+      }
+    }
+    if (number == 0) {
+      return "----- Nobody did this phase ----"
+    }
     returnString
   }
   
-  override def getPlayerMoveList(name:String) : String = {
+  override def getPlayerMoveList() : String = {
     var returnString = ""
-    for (player <- playerList) {
-      if (player.name.equals(name)) {
-        for(card <- player.moveList) returnString += " | " + card 
-      }
-    }
+    for(card <- getPlayer().moveList) returnString += " | " + card 
     returnString
   }
   
-  override def addToMoveList(name:String, index:Int) {
-    for (player <- playerList) {
-      if(name.equals(player.name)) {
-        var card = player.hand(index-1)
-        player.hand -= card
-        player.addCard(card)
-      }
-    }
+  override def addToMoveList(index:Int) {
+    var player = playerList(this.playerNumber)
+    var card = player.hand(index-1)
+    player.hand -= card
+    player.addCard(card)
   }
   
-  override def movePhase(name:String) = for (player <- playerList) if(player.name.equals(name)) player.move
+  override def movePhase() = getPlayer().move
     
-  override def getMove(name:String) : Boolean = {
-    for (player <- playerList) 
-      if(player.name.equals(name) && player.moved) return true 
-    false
+  override def getMove() = getPlayer().moved
+
+  override def updateHand() {
+    getPlayer().hand ++= getPlayer().moveList 
+    getPlayer().moveList.clear()
   }
   
-  override def updateHand(name:String) {
-    for(player <- playerList) {
-      if (player.name.equals(name))  player.hand ++= player.moveList
-    }
-  }
+  override def getPullCard() = getPlayer.pulledCard; notifyObservers
   
-  override def getCardDeck(name:String) : String = {
-    var returnCard = ""
-    for (player <- playerList) {
-      if (player.name.equals(name)) { 
-        if (Deck.getDeckSize == 0) 
-          Deck.createDeckFromStack()
-      returnCard = player.takeFromDeck().toString()
-      }
-    }
+  override def getCardDeck() : String = {
+    if (Deck.getDeckSize == 0) 
+      Deck.createDeckFromStack()
+    var returnCard = getPlayer().takeFromDeck().toString()
     notifyObservers
     returnCard
   }
   
-  override def getCardStack(name:String) : String = {
+  override def getCardStack() : String = {
     var returnCard = ""
-    for (player <- playerList) {
-      if (player.name.equals(name)) { 
-        if (Stack.stackSize == 0) returnCard = player.takeFromDeck().toString()
-        else {
-          notifyObservers(new UpdateStack())
-          returnCard = player.takeFromStack().toString()
-        }
-      }
+    if (Stack.stackSize == 0) 
+      returnCard = getPlayer().takeFromDeck().toString()
+    else {
+     notifyObservers(new UpdateStack())
+     returnCard = getPlayer().takeFromStack().toString()
     }
     returnCard
   }
   
-  override def dropCardStack(name:String, index:Int) {
-    for (player <- playerList) if(name.equals(player.name)) player.dropToStack(player.hand(index-1))
+  override def dropCardStack(index:Int) : String = {
+    var dropCard = getPlayer.dropToStack(getPlayer().hand(index-1)).toString()
     notifyObservers(new UpdateStack())
-    if (finishedRound(name)) roundOver = true
-    if (finishedGame(name)) gameOver = true
+    if (finishedRound()) roundOver = true
+    if (finishedGame()) gameOver = true
+    return dropCard
   }
   
   override def getBreak(name:String) : Boolean = {
-    for (player <- playerList) if (player.name.equals(name) && player.checkBreak) return true 
-    return false
-  }
-  
-  override def checkPlayerStopped(index:Int) : Boolean = {
-    if (getBreak(getPlayerTurn()(index-1))) return true
-    setBreak(getPlayerTurn()(index-1))
+    for (player <- playerList) {
+      if (player.name.equals(name) && player.checkBreak) return true
+    }
     false
   }
   
-  override def setBreak(name:String) =  for (player <- playerList) if (player.name.equals(name)) player.setBreak
+  override def skipPlayer(name:String) {
+    for (player <- playerList) {
+      if (player.name.equals(name)) {
+        player.setBreak
+        setPlayerNumber()   
+      }
+    }
+  }
   
-  override def finishedRound(name:String) : Boolean = {
-    for (player <- playerList) if (player.name.equals(name) && player.handSize != 0 && player.checkPhase != 10) return false 
-    gameStatus = GameStatus.RoundOver
+  override def stopPlayer(index:Int) = if (!getBreak(getPlayerTurn()(index-1))) setBreak(getPlayerTurn()(index-1))
+  
+  override def setBreak(name:String) {
+    for (player <- playerList) {
+      if (player.name.equals(name)) {
+        player.setBreak
+        getPlayer().pulledCard = false
+      }
+    }
+  }
+  
+  override def checkRemoveBreak() : Boolean = {
+    var player = getPlayer()
+    for (card <- player.hand) {
+      card match {
+        case break:SpecialCard if (break.typeCard.equals(CardType.Break)) => player.hand -= break; return true
+        case default =>
+      }
+    }
     return false
   }
   
-  override def finishedGame(name:String) : Boolean = {
-    for (player <- playerList) if (player.name.equals(name) && player.handSize != 0 && player.checkPhase == 10) return false 
-    gameStatus = GameStatus.GameOver
-    return false
+  override def finishedRound() : Boolean = {
+    if(getPlayer().handSize == 0 && getPlayer().checkPhase != 10) {
+      gameStatus = GameStatus.RoundOver
+      return false 
+    }
+    false 
+  }
+  
+  override def finishedGame() : Boolean = {
+    if (getPlayer().handSize == 0 && getPlayer().checkPhase == 10) {
+      gameStatus = GameStatus.GameOver
+      return true 
+    }
+    false
   }
   
   override def setNextPhase() {
@@ -220,13 +254,17 @@ class Controller extends Observable with IController {
      }
   }
   
+  override def setPlayerNumber() = if (playerNumber < countPlayer - 1) playerNumber += 1 else playerNumber = 0
+  
+  override def getPlayerNumber() = this.playerNumber
+  
   override def getRoundOver() = roundOver
   
+  override def getGameOver() = gameOver
+  
+  override def getPlayer() = playerList(playerNumber)
+  
   override def startNewRound() {
-    //rotate PlayerList
-    var firstPlayer = playerList.take(1)
-    playerList = playerList.drop(1)
-    playerList :+ firstPlayer
     //shuffle Deck again give Player Handcards and create new Stack
     createStackDeck()
     givePlayerHandCards()

@@ -27,7 +27,7 @@ trait IPlayer {
   def takeFromStack : Card
   
   //drops a Card from hand to stack
-  def dropToStack(card:Card)
+  def dropToStack(card:Card) : Card
   
   //set the state
   def setState(p:Phase)

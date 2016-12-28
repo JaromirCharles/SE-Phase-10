@@ -1,4 +1,5 @@
 package de.htwg.se.phase10.model.impl
+
 import scala.collection.mutable.ListBuffer
 
 
@@ -22,7 +23,6 @@ object helperMethods {
         if (!(secondCard.getRank.equals(compareCard.getRank) || compareCard.getRank.equals(CardType.Joker))) return false 
       }
     }
-    println("true")
     return true
   }
   
