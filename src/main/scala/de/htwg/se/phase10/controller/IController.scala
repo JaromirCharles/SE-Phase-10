@@ -119,4 +119,8 @@ trait IController extends IObservable{
   //checks if game is over
   def getGameOver() : Boolean
   
+  def addCardToList(indexSpieler:Int,indexCard:Int,indexWo:Int) : Boolean
+  
+  def checkAdd(player:Player) : Boolean
+  
 }

@@ -2,7 +2,6 @@ package de.htwg.se.phase10.model.impl
 
 import scala.collection.mutable.ListBuffer
 
-
 object helperMethods {
   
   def checkSize(cards: List[Card], size:Int) : Boolean = {
@@ -72,9 +71,8 @@ object helperMethods {
     var bool = true
     val special:SpecialCard= new SpecialCard(CardType.Joker)
     while (bool && in != number -1) {
-      in += 1
       currentCard match {
-        case special:SpecialCard => currentCard = cards(in)
+        case special:SpecialCard => in += 1; currentCard = cards(in)
         case _ => currentCard = cards(in);bool = false;
       }
     }

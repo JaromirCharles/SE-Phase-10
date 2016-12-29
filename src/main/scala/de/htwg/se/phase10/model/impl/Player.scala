@@ -12,14 +12,18 @@ class Player(playerName: String) extends IPlayer {
   var moveList = new ListBuffer[Card]()
   private var break = false
   var pulledCard = false
-  var phaseLength = 0
-
+  private var phaseLength = 3
+  
   def createHand() {
      hand.clear()
      val handHelp = Deck.cards.take(10)
      for(x <- handHelp) hand += x
      Deck.cards = Deck.cards.drop(10)
   }
+  
+  override def getPhaseLength() = phaseLength
+  
+  override def setPhaseLength(length:Int) = phaseLength = length
   
   override def checkBreak = break
   

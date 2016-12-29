@@ -4,7 +4,6 @@ import de.htwg.se.phase10.model.impl.Deck
 import de.htwg.se.phase10.model.impl.Card
 import de.htwg.se.phase10.model.impl.Stack
 import de.htwg.se.phase10.model.impl.Player
-import de.htwg.se.phase10.controller.PlayerStopped
 import de.htwg.se.phase10.model.impl._
 import de.htwg.se.phase10.model.impl.PlayerList.playerList
 import de.htwg.se.phase10.controller.GameStatus
@@ -16,6 +15,7 @@ import de.htwg.se.phase10.controller.IController
 import scala.collection.mutable.ListBuffer
 import de.htwg.se.phase10.util.Observer.Observable
 import de.htwg.se.phase10.model.impl.Phase2
+import de.htwg.se.phase10.model.impl.helperMethods
 
 class Controller extends Observable with IController {
   
@@ -25,6 +25,7 @@ class Controller extends Observable with IController {
   private var newGameValue = false
   private var playerNumber = 0
   private var countPlayer = 0
+  private var playerMovedList = 0
   
   override def newGame(bool:Boolean) {
     newGameValue = bool
@@ -120,14 +121,13 @@ class Controller extends Observable with IController {
   
   override def getMoveList() : String = {
     var returnString = ""
-    var number = 0
     for (player <- playerList) {
       if(player.moved) {
+        playerMovedList += 1
         returnString += player.name + ": " + player.moveList.mkString(" ,")+"\n"
-        number += 1
       }
     }
-    if (number == 0) {
+    if (playerMovedList == 0) {
       return "----- Nobody did this phase ----"
     }
     returnString
@@ -225,7 +225,7 @@ class Controller extends Observable with IController {
   override def finishedRound() : Boolean = {
     if(getPlayer().handSize == 0 && getPlayer().checkPhase != 10) {
       gameStatus = GameStatus.RoundOver
-      return false 
+      return true 
     }
     false 
   }
@@ -241,15 +241,25 @@ class Controller extends Observable with IController {
   override def setNextPhase() {
      for (player <- playerList) {
        player.checkPhase match {
-         case 1 => player.setPhase(); player.setState(Phase2);
-         case 2 => player.setPhase(); player.setState(Phase3);
-         case 3 => player.setPhase(); player.setState(Phase4);
-         case 4 => player.setPhase(); player.setState(Phase5);
-         case 5 => player.setPhase(); player.setState(Phase6);
-         case 6 => player.setPhase(); player.setState(Phase7);
-         case 7 => player.setPhase(); player.setState(Phase8);
-         case 8 => player.setPhase(); player.setState(Phase9);
-         case 9 => player.setPhase(); player.setState(Phase10);
+         case 1 => if (player.moved) {player.setPhase(); player.setState(Phase2); player.setPhaseLength(3)}
+                   else player.setPhaseLength(3) 
+         case 2 => if (player.moved) {player.setPhase(); player.setState(Phase3); player.setPhaseLength(4)}
+                   else player.setPhaseLength(3) 
+         case 3 => if (player.moved) {player.setPhase(); player.setState(Phase4); player.setPhaseLength(7)}
+                   else player.setPhaseLength(4)
+         case 4 => if (player.moved) {player.setPhase(); player.setState(Phase5); player.setPhaseLength(8)}
+                   else player.setPhaseLength(7)
+         case 5 => if (player.moved) {player.setPhase(); player.setState(Phase6); player.setPhaseLength(9)}
+                   else player.setPhaseLength(8)
+         case 6 => if (player.moved) {player.setPhase(); player.setState(Phase7); player.setPhaseLength(4)}
+                   else player.setPhaseLength(9)
+         case 7 => if (player.moved) {player.setPhase(); player.setState(Phase8); player.setPhaseLength(7)}
+                   else player.setPhaseLength(4)
+         case 8 => if (player.moved) {player.setPhase(); player.setState(Phase9); player.setPhaseLength(5)}
+                   else player.setPhaseLength(7)
+         case 9 => if (player.moved) {player.setPhase(); player.setState(Phase10); player.setPhaseLength(5)}
+                   else player.setPhaseLength(5)
+         case 10 => player.setPhaseLength(5)
        }
      }
   }
@@ -265,12 +275,63 @@ class Controller extends Observable with IController {
   override def getPlayer() = playerList(playerNumber)
   
   override def startNewRound() {
-    //shuffle Deck again give Player Handcards and create new Stack
+    setNextPhase()
     createStackDeck()
     givePlayerHandCards()
-    //clear Droplist from every Player
     roundOver = false
-    for (player <- playerList) player.moveList.clear()
+    playerMovedList = 0
+    for (player <- playerList) {
+      player.moveList.clear()
+      player.moved = false
+    }
     gameStatus = GameStatus.NextRound
   }
+
+  override def addCardToList(indexSpieler:Int,indexCard:Int,indexWo:Int) : Boolean = {
+    var handCard = getPlayer.hand(indexCard-1)
+    var movePlayer = getPlayerTurn()(indexSpieler - 1)
+    for (player <- playerList) {
+      if (player.name.equals(movePlayer) && indexWo == 1 && player.moved) {
+        player.moveList.insert(0, handCard)
+        player.setPhaseLength(player.getPhaseLength() + 1);
+        if (!checkAdd(player)) {
+          player.moveList.remove(0)
+          player.setPhaseLength(player.getPhaseLength() - 1);
+          return false
+        } else {
+          getPlayer.hand -= handCard
+          return true
+        }
+      } else if (player.name.equals(movePlayer) && indexWo == 2 && player.moved) {
+        player.moveList.insert(player.getPhaseLength(), handCard)
+        if (!checkAdd(player)) {
+          player.moveList.remove(player.getPhaseLength())
+          player.moveList += handCard
+          if (!checkAdd(player)) {
+            player.moveList.remove(player.moveList.length-1)
+            return false
+          } else {
+            getPlayer.hand -= handCard
+            return true
+          }
+        } else {
+          getPlayer.hand -= handCard
+          return true  
+        }
+      }
+    }
+    return false
+  }
+  
+  override def checkAdd(player:Player) : Boolean = {
+    var length = player.getPhaseLength()
+    player.checkPhase match {
+      case 1 | 7 | 9 | 10 if (player.moved && helperMethods.checkTwoGroups(player.moveList.toList, player.getPhaseLength())) =>  return true;
+      case 2 | 3 | 0  if (player.moved && helperMethods.checkOneGroup(player.moveList.toList, player.getPhaseLength())) => return true;
+      case 4 | 5 | 6 if (player.moved && helperMethods.checkRow(player.moveList.toList, player.getPhaseLength())) => return true;
+      case 8 if (player.moved && helperMethods.checkColor(player.moveList.toList, player.getPhaseLength())) => return true;
+      case default => return false
+    }
+  }
+  
 }

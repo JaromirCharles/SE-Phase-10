@@ -8,6 +8,10 @@ trait IPlayer {
   //moves his phase 
   def move
   
+  def getPhaseLength() : Int
+  
+  def setPhaseLength(length:Int)
+  
   //set the break value to true/false
   def setBreak
   
