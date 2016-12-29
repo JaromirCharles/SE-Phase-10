@@ -1,6 +1,6 @@
 package de.htwg.se.phase10.model.impl
-import scala.collection.mutable.ListBuffer
 
+import scala.collection.mutable.ListBuffer
 
 object helperMethods {
   
@@ -16,19 +16,12 @@ object helperMethods {
     for ((x,i)<-cards.zipWithIndex) {
       var compareCard = cards(i)
       if (i < number) {
-          if (compareCard.isInstanceOf[NormalCard] && firstCard.isInstanceOf[NormalCard]) { 
-            if(!compareCard.asInstanceOf[NormalCard].cardtype.equals(firstCard.asInstanceOf[NormalCard].cardtype))
-                return false
-          }
+        if (!(firstCard.getRank.equals(compareCard.getRank) || compareCard.getRank.equals(CardType.Joker))) return false 
       }
       if (i > number) {
-          if (compareCard.isInstanceOf[NormalCard] && secondCard.isInstanceOf[NormalCard]) { 
-            if(!compareCard.asInstanceOf[NormalCard].cardtype.equals(secondCard.asInstanceOf[NormalCard].cardtype)) 
-               return false 
-          }
+        if (!(secondCard.getRank.equals(compareCard.getRank) || compareCard.getRank.equals(CardType.Joker))) return false 
       }
     }
-    println("true")
     return true
   }
   
@@ -37,10 +30,7 @@ object helperMethods {
     for ((x,i)<-cards.zipWithIndex) {
       var compareCard = cards(i)
       if (i < number) {
-          if (compareCard.isInstanceOf[NormalCard] && firstCard.isInstanceOf[NormalCard]) { 
-            if(!compareCard.asInstanceOf[NormalCard].cardtype.equals(firstCard.asInstanceOf[NormalCard].cardtype))
-                return false
-          }
+        if (!(firstCard.getRank.equals(compareCard.getRank) || compareCard.getRank.equals(CardType.Joker))) return false 
       }
     }
     var cardsRow = cards.drop(number)
@@ -81,9 +71,8 @@ object helperMethods {
     var bool = true
     val special:SpecialCard= new SpecialCard(CardType.Joker)
     while (bool && in != number -1) {
-      in += 1
       currentCard match {
-        case special:SpecialCard => currentCard = cards(in)
+        case special:SpecialCard => in += 1; currentCard = cards(in)
         case _ => currentCard = cards(in);bool = false;
       }
     }

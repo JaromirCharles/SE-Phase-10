@@ -1,259 +1,219 @@
 package de.htwg.se.phase10.aview.tui
-import de.htwg.se.phase10.controller.CheckPlayer._
-import de.htwg.se.phase10.controller.CheckCard._
-import de.htwg.se.phase10.controller.CheckPlayer
-import scala.util.control.Breaks._
-import scala.util.control._
+import de.htwg.se.phase10.controller.AddPlayer
+import de.htwg.se.phase10.controller.ExitGame
+import de.htwg.se.phase10.controller.IController
+import de.htwg.se.phase10.controller.GameStatus
+import de.htwg.se.phase10.controller.StartGame
+import de.htwg.se.phase10.controller.UpdateStack
+import de.htwg.se.phase10.util.Observer.IObserver
+import de.htwg.se.phase10.util.Observer.Event
 
-object helperMethods {
+class Tui2(var controller:IController) extends IObserver {
   
-    // anzahl der Spieler eingeben  
-    def numberOfPlayer() : Int = {
-    var bool = true
-    var anzPlayer = 0
-    while (bool) { 
-      println("Anzahl der Spieler eingeben (zwischen 2 - 4): ");
-      try { anzPlayer = scala.io.StdIn.readInt(); 
-        if (!checkAnzPlayer(anzPlayer)) 
-          println("Nur Zahlen im Bereich von 2 - 4 eingeben!") 
-        else bool = false
-      } catch { 
-        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 2 - 4 eingeben!")
-      }
-    } 
-    return anzPlayer;
-  }
+  private var boolInput = true
+  private var numberOfPlayer = 1
+  private var numberPlayerCount = 0
+  private var quit = false
   
-  //eindeutigen Namen für jeden Spieler eingeben
-  def nameOfPlayer() {
-    var numberPlayer = 1
-    var anzPlayer = numberOfPlayer()
-    var i = 1
-    println("Namen der Spieler eingeben: ");
-    while ( anzPlayer != 0) {
-      println("Name Spieler"+i+": ")
-      var namePlayer = scala.io.StdIn.readLine(); 
-      if (createPlayer(namePlayer)) { 
-        anzPlayer -= 1 
-        i += 1 
-      } else println("Name bereits vergeben, wähle einen anderen nickname!")   
-    }
-  }
-
-  //Spieler zieht Karte vom Deck oder vom Ablagestapel
-  def playerGetCard() : Int = {
-    var getCard = 0
-    var bool = true
-    while (bool) {
-      println("Drücke ... \n(1) um eine Karte vom Deck zu ziehen\n(2) um eine Karte vom Ablagestapel zu siehen") 
-      try { 
-        val input = scala.io.StdIn.readInt()
-        getCard = input; 
-        if (!checkGetCard(getCard)) 
-          println("Nur Zahlen im Bereich von 1 - 2 eingeben!") 
-        else bool = false
-      } catch { 
-        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - 2 eingeben!") 
-      }
-    }
-    return getCard;
-  }
+  controller.addObserver(this)
   
-  //Spieler optionen Phase ablegen, an eine Phase anlegen oder Zug beenden
-  def playerOptions(name:String)  {
-    var bool = true 
-    var input = 0;
-    while (bool) {
-      println("Drücke ... \n(1) um deine Phase abzulegen\n(2) um an eine Phase anzulegen\n(3) um deinen Zug zu beenden")
-      try { 
-        input = scala.io.StdIn.readInt() 
-        if(!checkPlayerOption(input)) 
-          println("Nur Zahlen im Bereich von 1 - 3 eingeben!") 
-        else bool = false
-      } catch { 
-        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - 3 eingeben!") 
-      }
-    }
-    matchCase(name,input);
-  }
+  printMainMenu()
   
-  //gewählte Option vom Spieler wird ausgeführt
-  def matchCase(name:String,i:Int) {
-    i match {
-      case 1 =>movePhase(name)
-      case 2 =>showMovedPhase()
-      case 3 =>finishTurn(name)
+  def inputString(input:String) : Boolean = {
+    if (createPlayer(input)) {
+      return true
     }
-  }
-  
-  def showMovedPhase() {
-    println("Herausgelegten Phasen:")
-  }
-  
-  def movePhase(name:String) {
-    if(getMoved(name)) {
-      println("Phase bereits gemacht")
-      playerOptions(name)
-    } else {
-    println("Die Phase in korrekter Reihenfole eingeben!")
-    var phasenSize = getPhase(name)._2
-    while(phasenSize > 0) {
-      println("Abgegebene Karten:")
-      println(getMoveList(name))
-      println("Auswahl der Karten:")
-      println(getIndexCardList(name))
-      var size = getHandSize(name).toString()
-      try { 
-        var input = scala.io.StdIn.readInt()
-        if(!(input >= 1 && input <= getHandSize(name))) println("Nur Zahlen zwischen 1 - " + size + " eingeben!\n")
-        else { 
-          addToMoveList(name,input)
-          phasenSize -= 1
-        }
-      } catch {
-        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - " + size+" eingeben!\n")
-      } 
-    }
-    println(getMoveList(name))
-    CheckPlayer.movePhase(name)
-    if (getMoved(name)) {
-      println("Es hat geklappt")
-    }
-    else {
-    println("Es hat nicht geklappt")
-    updateHand(name)
-    }
-    playerOptions(name)
-    }
-  }
-  
-  //Option Spieler beendet seinen Zug, entweder anderen Spieler stoppen oder eine Karte auf den Ablagestapel legen
-  def finishTurn(name:String) {
-    var bool = true
-    var input = 0
-    while (bool) { 
-      println("Drücke ... \n(1) um eine Karte auf den Ablagestapel zu legen und deinen zug zu beenden")
-      println("(2) um einen Spieler zu stoppen und deinen Zug zu beenden")
-      try { 
-        input = scala.io.StdIn.readInt()
-        if(!checkGetCard(input)) 
-          println("Nur Zahlen im Bereich von 1 - 2 eingeben!\n") 
-        else bool = false
-      } catch { 
-        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - 2 eingeben!\n") 
-      }
-    }
-    input match  {
-      case 1 => putCard(name)
-      case 2 => stopPlayer(name)
-    }
-  }
-  
-  //Spieler ist gestoppt und wird übersprungen
-  def yourTurn(name:String) : Boolean ={
-    if (checkBreak(name)) {
-      println(name + " ist gestoppt und muss aussetzen!");
+    if (input.equals("1") && controller.getStatus().equals(GameStatus.Welcome)) {
+      controller.newGame(true)
+    } else if (input.equals("2") && controller.getStatus().equals(GameStatus.Welcome)) {
+      printQuitMenu()
       return false
+    } else {
+      return checkInput(input)
     }
-    println(name + " ist am Zug...")
     return true
   }
   
-  //Spieler legt karte auf Ablagestapel
-  def putCard(name:String) {
-    var input = 0
-    var size = (getHandSize(name)).toString()
-    var bool = true
-    while (bool) {
-      println("Wähle eine Karte die du wegschmeißen willst:\n" + getIndexCardList(name))
-      try { 
-        input = scala.io.StdIn.readInt()
-        if(!(input >= 1 && input <= getHandSize(name))) 
-          println("Nur Zahlen im Bereich von 1 - " +size+" eingeben!\n") 
-        else { 
-          putCardStack(name,input)
-          bool = false
-        }
-      } catch {
-        case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - " + size+" eingeben!\n")
-      } 
-    }
+  def printMainMenu() {
+    println("Welcome to Phase 10\n")
+    println("Choose ...\n")
+    println("(1) Start new Game")
+    println("(2) Quit")
   }
   
-  //Auswahl des Spielers den man stoppen will
-  def stopPlayer(name:String) {
-    if (!checkBreakCard(name)) {
-      println(name + " du hast kein Stopper auf der Hand, somit kannst du auch niemanden stoppen!")
-      finishTurn(name)
-    } else {
-      var input = 0
-      var bool = true
-      println("Wählen Sie den Spieler aus der gestoppt werden soll:\n" + getStopPlayerList(name))
-      while (bool) {
-        try { 
-          input = scala.io.StdIn.readInt()
-          if (!checkPlayerStop(input)) {
-            println("Spieler konnte nicht gestoppt werden!\n")
-            stopPlayer(name)
-          } else bool = false
-        } catch {
-          case inputString : NumberFormatException => println("Bitte eine Zahl zwischen 1 - " + (getPlayer().size - 1).toString() +" eingeben!\n")
-        } 
+  def printNumberPlayer() = println("Choose a player number between 2 - 4 ...")
+
+  def createPlayer(input:String) : Boolean = {
+    if (!controller.checkNewGame()) {
+      return false
+    }
+    if (controller.checkNewGame() && numberOfPlayer == 1) {
+      try {
+        numberOfPlayer = input.toInt
+      } catch {
+        case inputString : NumberFormatException => println("Only numbers between 2 - 4 are allowed!")
+        printNumberPlayer()
+        return true
+      }
+      if (numberOfPlayer < 2 || numberOfPlayer > 4) {
+        println("Only numbers between 2 - 4 are allowed!")
+        printNumberPlayer()
+        numberOfPlayer = 1
+        return true
+      }
+      println("Player 1  - name: ")
+      numberPlayerCount += 1
+      return true
+    } else if (controller.checkNewGame() && numberPlayerCount < numberOfPlayer) {
+      controller.createPlayer(input)
+      numberPlayerCount += 1
+      println("Player "+numberPlayerCount + " - name: ")
+      return true
+    } else if (controller.checkNewGame() && numberPlayerCount == numberOfPlayer) {
+      controller.createPlayer(input)
+      numberPlayerCount += 1
+      println("Enter something to continue ... ")
+      return true
+    }
+    if (numberPlayerCount > numberOfPlayer) {
+      controller.newGame(false)
+      controller.givePlayerHandCards()
+      controller.setPlayerNumber()
+      printGameField(controller.getName())
+      return true
+    }
+    return false
+  }
+  
+  def printPlayer(name:String) = if (numberPlayerCount <= numberOfPlayer) println(controller.getStatus()+" - "+"name " +name)
+  
+  def printGameField(name:String) {
+
+    if (controller.getBreak(name)) {
+      println(name + " you skip this turn!")
+      controller.skipPlayer(name)
+      return printGameField(controller.getName())
+    }
+    println("-----------------------------------------------")
+    println("It's your turn " + controller.getName() +"\n")
+    println("Your current Phase: " + controller.getPhaseNameNumber()._1)
+    println("All players ...")
+    println(controller.getPlayerList())
+    println("People which did this Phase already ... ")
+    println(controller.getMoveList())
+    println("Your move list: " + controller.getPlayerMoveList())
+    println("First card of the Stack: " + controller.getStack())
+    println("Your hand cards...\n" + controller.getHand()+"\n")
+    println("Choose...")
+    println("(1) get card from deck\n(2) get card from stack\n(3+number of card) drop card stack and finish turn\n(4+number of player) stop player and finish turn")
+    println("(5+number of card) add card to moveList\n(6) move phase\n(7+number of existing phase+card index+index where to put) put card to an existing phase\n(8) quit game ")
+  }
+  
+  def checkInput(input:String) : Boolean = {
+    if (quit) return false
+    var index = -1
+    var inputMatch = input
+    var indexPhase = -1
+    var existingPhase = -1
+    
+    if (input.length() > 1 && input.length < 4)  {
+      inputMatch = input.substring(0,1)
+      try {
+        index = input.substring(1).toInt
+      } catch {
+        case inputString : NumberFormatException => println("Not a correct index!")
+        printGameField(controller.getName())
+        return true 
+      }
+    } else if (input.length() == 4) {
+      inputMatch = input.substring(0,1)
+      try {
+        existingPhase = input.substring(1,2).toInt
+        index = input.substring(2,3).toInt
+        indexPhase = input.substring(3).toInt
+      } catch {
+        case inputString : NumberFormatException => println("Not a correct input!")
+        printGameField(controller.getName())
+        return true 
       }
     }
+    if (inputMatch.equals("3") && (index < 1 || index > controller.getHandSize())) {
+      println("Not a correct card index!")
+      printGameField(controller.getName())
+      return true
+    } else if (inputMatch.equals("4") && (index < 1 || index > numberOfPlayer)) {
+      println(inputMatch.equals("4"))
+      println(inputMatch)
+      println("Not a correct player index!")
+      printGameField(controller.getName())
+      return true
+    } else if (inputMatch.equals("5") && (index < 1 || index > controller.getHandSize())) {
+      println("Not a correct card index!")
+      printGameField(controller.getName())
+      return true
+    } else if (inputMatch.equals("7") & ((indexPhase < 1 || indexPhase > 2) || (index < 1 || index > controller.getHandSize()) || (existingPhase < 1 || existingPhase > numberOfPlayer))) {
+      println("Not a correct input!")
+      printGameField(controller.getName())
+      return true
+    }
+    
+    inputMatch match {
+      case "1" if (!controller.getPullCard()) => println("Your pulled card is: " + controller.getCardDeck()) 
+      case "1" if (controller.getPullCard()) => printPullAlready()
+      case "2" if (!controller.getPullCard()) => println("Your pulled card is: " + controller.getCardStack()) 
+      case "2" if (controller.getPullCard()) => printPullAlready()
+      case "3" if (controller.getPullCard()) => println("You dropped " + controller.dropCardStack(index) + " to the stack!"); 
+                                                if (controller.getRoundOver()) {println(controller.getStatus() + " - New round begins ...");controller.startNewRound();}
+                                                else if (controller.getGameOver()) {println("Congratulation " + controller.getName() + " you won!"); return false }
+                                                controller.setPlayerNumber()
+      case "3" if (!controller.getPullCard()) => printPull()
+      case "4" if (!controller.getPullCard()) => printPull()
+      case "4" if (controller.getBreak(controller.getPlayerTurn()(index-1))) => println("Player is stopped at the moment, you cant stop him in this time again!")
+      case "4" if (!controller.checkRemoveBreak()) => println("You dont have a stop card, yo you cant stop someone")
+      case "4" if (!controller.getBreak(controller.getPlayerTurn()(index-1))) => controller.stopPlayer(index); println("Player " + controller.getPlayerTurn()(index - 1)  + " stopped");
+                                                if (controller.getRoundOver()) {println(controller.getStatus() + " - New round begins ...");controller.startNewRound()}
+                                                else if (controller.getGameOver()) {println("Congratulation " + controller.getName() + " you won!"); return false }
+                                                controller.setPlayerNumber() 
+      case "5" if (!controller.getPullCard) => printPull()
+      case "5" if (controller.getMove()) => println("You did your phase already, you can only put a card to an existing phase!")
+      case "5" => controller.addToMoveList(index)
+      case "6" if (!controller.getPullCard) => printPull()
+      case "6" if (controller.getMove()) => println("You did this phase already!")
+      case "6" => controller.movePhase(); if (controller.getMove()) {println(controller.getStatus() + " - Phase achieved! Get rid of all your cards")} 
+                                          else {controller.updateHand(); println("Phase not completed!")}
+      case "7" if (!controller.getPullCard) => printPull()
+      case "7" if (!controller.getMove()) => println("You have to do the phase first!") 
+      case "7" if (controller.addCardToList(existingPhase, index, indexPhase)) => println("Card was regular!")
+      case "7" => println("not a regular card")
+      case "8" => controller.quitGame(); return false
+      case default => println("Wrong Input!")
+    }
+    printGameField(controller.getName())
+    return true
   }
   
-  //Check ob spieler alle Karten abgelegt hat
-  def finishRound(name:String) = playerFinishedRound(name)
-}
-
-class Tui () {
-	helperMethods.nameOfPlayer()  //Eingabe von Anzahl und Namen der Spieler
-	println("Alle Mitspieler: " + getPlayerList()) //Alle Mitspieler werden einmalig ausgegeben
-	var gameBool = true
-	val gameBreak = new Breaks
-	gameBreak.breakable {
-	while (gameBool) {
-	  var boolTurn = true
-	  println("Deck wird gemischelt und Ablagestapel erzeugt ..." )
-	  createDeckStack()  //Deck wird erzeugt
-	  println("Die Karten werden ausgegeben .... ")
-	  givePlayerHandCards() //Jeder Spieler in der Playerlist bekommt seine 10 Handkarten
-	  val roundBreak = new Breaks
-	  roundBreak.breakable{
-	  while(boolTurn) {
-	      for (x<- getPlayer()) {  //Jeder Spieler ist nacheinander am Zug
-	        val stopBreak = new Breaks
-	        stopBreak.breakable{
-	          println("--------------------------------------------------------------")
-	          if (!helperMethods.yourTurn(x)) {setBreak(x); stopBreak.break;} //Checken ob Spieler gestoppt sonst ist er am Zug
-	          println("Deine aktuelle Phase: " + getPhase(x)._1)  //Anzeigen welche Phase er erledigen muss
-	          println("Der Ablagestapel: " + getStack())  //Anzeigen der ersten Karte auf dem Ablagestapel
-	          println(x + " deine Handkarten:\n" + getIndexCardList(x))  //Anzeigen der Handkarten von dem Spieler der an der Reihe ist
-	          var getCard = helperMethods.playerGetCard()  //Vom Deck oder Stapel ziehen
-	          println("Deine gezogene Karte: " + getGetCard(x,getCard)) //Ausgabe der gezogenen Karte
-	          println(x + " deine Handkarten:\n" + getIndexCardList(x))  //erneutes Anzeigen der Karten
-	          helperMethods.playerOptions(x)  //Optionen des Spielers
-	          //helperMethods.matchCase(x, playerOption)  Für was hat er sich entschieden
-	          if (helperMethods.finishRound(x) && getPhaseInt(x) != 10) {  //Checken ob Spieler alle Karten abgelegt hat und in welcher Phase er ist
-	            println("Runde ist vorbei...")  //Falls er alle Karten abgelegt hat und noch nicht in der 10 Phase war wird eine neue Runde gestartet
-              println("Spieler " + x + " hat alle Karten abgelegt!")
-              println("Phasenübersicht:")
-              println("--------------------------------------------------------------")
-              changePlayerList()  //Der Spieler der als erstes ziehen durfte kommt jetzt als letztes und sein "Nebensitzer" darf als erstes ziehen
-	            roundBreak.break;
-	          }else if(helperMethods.finishRound(x) && getPhaseInt(x) == 10) {  //Check ob Spieler alle Karten abgelegt hat und in letzter Phase ist
-	              gameBool = false;  //Dann wird das Spiel beendet und der Spieler hat gewonnen
-	              println("--------------------------------------------------------------")
-	              println("Das Spiel ist vorbei!")
-	              println("DER GEWINNER IST " + x)
-	              gameBreak.break
-	            }
-	         }
-	    }
-	   }
+  def printPull() = println("Pull a card first!")
+  
+  def printPullAlready() = println("You pulled a card already!")
+  
+  def printQuitMenu() {
+    println(controller.getStatus() + " exit game ...")
+  }
+  
+  override def update(e:Event) {
+    if (e.isInstanceOf[ExitGame]) {
+      quit = true
+      printQuitMenu()
+    } else if (e.isInstanceOf[StartGame]) {
+      printNumberPlayer()
+    } else if (e.isInstanceOf[AddPlayer]) {
+      controller.setPlayerNumber()
+      printPlayer(controller.getName())
+    } else if (e.isInstanceOf[UpdateStack]) {
+      println("Card from deck to stack...")
+    } else {
+      printGameField(controller.getName())
     }
-	}
-	}
+  }
 }
 

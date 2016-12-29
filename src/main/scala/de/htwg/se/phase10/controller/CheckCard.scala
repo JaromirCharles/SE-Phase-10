@@ -36,7 +36,7 @@ object CheckCard {
   }
   
   def createDeckStack() {
-    Deck.createShuffleDeck()
+    Deck.createShuffleDeck
     Stack.createStack()
   }
   

@@ -9,5 +9,7 @@ object Stack extends IStack {
     Deck.cards = Deck.cards.drop(1)
   }
   
-  def getTopCard() = stack.take(1)
+  def stackSize = stack.size
+  
+  def getTopCard() = stack.head
 }

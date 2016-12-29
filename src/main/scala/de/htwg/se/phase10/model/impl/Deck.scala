@@ -1,4 +1,5 @@
 package de.htwg.se.phase10.model.impl
+
 import de.htwg.se.phase10.model.IDeck
 
 object Deck extends IDeck {
@@ -11,11 +12,11 @@ object Deck extends IDeck {
   
   var cards:List[Card] = Nil
   
-  def createShuffleDeck() = cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
+  override def createShuffleDeck = cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
   
-  def getDeckSize() = cards.length
+  override def getDeckSize = cards.length
   
-  def recreateShuffleDeck() {
+  override def createDeckFromStack() {
     cards = Stack.stack.drop(1)
     cards = scala.util.Random.shuffle(Deck.cards)
     Stack.stack = Stack.stack.take(1)
