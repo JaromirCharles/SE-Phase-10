@@ -50,6 +50,7 @@ class Controller extends Observable with IController {
     gameStatus = GameStatus.NewDeck
     Stack.createStack()
     gameStatus = GameStatus.NewStack
+    notifyObservers(new UpdateStack())
   }
   
   override def getStack() : String = {
@@ -58,6 +59,10 @@ class Controller extends Observable with IController {
     }
     Stack.getTopCard().toString()
   }
+  
+  override def getStackSize() = Stack.stackSize
+  
+  override def getStackCard() = Stack.getTopCard()
   
   override def createPlayer(name:String)  {
     playerList += new Player(name)
@@ -333,5 +338,4 @@ class Controller extends Observable with IController {
       case default => return false
     }
   }
-  
 }

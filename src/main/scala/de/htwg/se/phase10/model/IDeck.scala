@@ -12,5 +12,7 @@ trait IDeck {
   
   //creates a new deck when old deck is empty  
   def createDeckFromStack
-
+  
+  //set all Icons in cards
+  def setIcons()
 }

@@ -12,8 +12,17 @@ object Deck extends IDeck {
   
   var cards:List[Card] = Nil
   
-  override def createShuffleDeck = cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
+  override def createShuffleDeck {
+    cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
+    setIcons()
+  }
   
+  override def setIcons() {
+    for (card <- cards) {
+      card.setIcon() 
+    }
+  }
+    
   override def getDeckSize = cards.length
   
   override def createDeckFromStack() {
