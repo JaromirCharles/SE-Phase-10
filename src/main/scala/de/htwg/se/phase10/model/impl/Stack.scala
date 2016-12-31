@@ -1,4 +1,5 @@
 package de.htwg.se.phase10.model.impl
+
 import de.htwg.se.phase10.model.IStack
 
 object Stack extends IStack {

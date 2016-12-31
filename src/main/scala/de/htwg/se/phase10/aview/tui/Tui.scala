@@ -8,7 +8,7 @@ import de.htwg.se.phase10.controller.UpdateStack
 import de.htwg.se.phase10.util.Observer.IObserver
 import de.htwg.se.phase10.util.Observer.Event
 
-class Tui2(var controller:IController) extends IObserver {
+class Tui(var controller:IController) extends IObserver {
   
   private var boolInput = true
   private var numberOfPlayer = 1
