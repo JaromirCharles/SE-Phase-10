@@ -4,7 +4,7 @@ import swing._
 import javax.swing.ImageIcon
 import de.htwg.se.phase10.controller.IController
 
-class Phasen(controller:IController) extends Frame {
+class Phasen(gui:createGameField,name:String,controller:IController) extends Frame {
   val color = new Color(0x00592D)
   
   def phasenCard = new FlowPanel() {

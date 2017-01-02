@@ -15,13 +15,14 @@ class MainField(controller:IController) {
 class createGameField(controller:IController) extends Frame with IObserver {
   controller.addObserver(this)
   controller.setPlayerNumber()
+  val willMove = false
   val deckStack = new DeckStack(this,controller)
   controller.createStackDeck()
   val infoFeld = new GameInformation(controller)
   controller.givePlayerHandCards()
-  val handCards = new PlayerHand(controller)
-  val phasen = new Phasen(controller)
-  val player = new AllPlayer(controller)
+  val handCards = new PlayerHand(this,controller)
+  val phasen = new Phasen(this,controller.getName(),controller)
+  val player = new AllPlayer(this,controller)
   val color = new Color(0x00592D)
   menuBar = new MenuBar {
     contents += new Menu("Game Menu") {
@@ -59,6 +60,11 @@ class createGameField(controller:IController) extends Frame with IObserver {
   override def update(e:Event) {
     if (e.isInstanceOf[UpdateStack]) {
       deckStack.updateStack()
+    } else {
+      if (controller.getBreak(controller.getName())) {
+        controller.skipPlayer(controller.getName())
+      }
+      infoFeld.turnPhase.text_=("Its your turn " + controller.getName() +"\nYour current Phase: " + controller.getPhaseNameNumber()._1)
     }
   }
 }

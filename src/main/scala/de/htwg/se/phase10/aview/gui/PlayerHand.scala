@@ -1,9 +1,10 @@
 package de.htwg.se.phase10.aview.gui
 
 import swing._
+import swing.event._
 import de.htwg.se.phase10.controller.IController
 
-class PlayerHand(controller:IController) extends Frame {
+class PlayerHand(gui:createGameField, controller:IController) extends Frame {
   val color = new Color(0x00592D)
   
   def cards = new FlowPanel() {
@@ -103,6 +104,33 @@ class PlayerHand(controller:IController) extends Frame {
   updateHand()
   controller.notifyObservers
   
+  listenTo(card1,card2,card3,card4,card5,card6,card7,card8,card9,card10,card11)
+  
+  reactions += {
+    case ButtonClicked(`card1`) if (controller.getPullCard() && card1.icon != null && !gui.willMove) => controller.dropCardStack(1);updateHand();
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card2`) if (controller.getPullCard() && card2.icon != null && !gui.willMove) => controller.dropCardStack(2);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card3`) if (controller.getPullCard() && card3.icon != null && !gui.willMove) => controller.dropCardStack(3);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card4`) if (controller.getPullCard() && card4.icon != null && !gui.willMove) => controller.dropCardStack(4);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card5`) if (controller.getPullCard() && card5.icon != null && !gui.willMove) => controller.dropCardStack(5);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card6`) if (controller.getPullCard() && card6.icon != null && !gui.willMove) => controller.dropCardStack(6);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card7`) if (controller.getPullCard() && card7.icon != null && !gui.willMove) => controller.dropCardStack(7);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card8`) if (controller.getPullCard() && card8.icon != null && !gui.willMove) => controller.dropCardStack(8);updateHand() 
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card9`) if (controller.getPullCard() && card9.icon != null && !gui.willMove) => controller.dropCardStack(9);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card10`) if (controller.getPullCard() && card10.icon != null && !gui.willMove) => controller.dropCardStack(10);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(`card11`) if (controller.getPullCard() && card11.icon != null && !gui.willMove) => controller.dropCardStack(11);updateHand()
+                                controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    case ButtonClicked(_) => gui.infoFeld.turnPhase.text_=("Not a correct move!")
+  }
   
   def updateHand() {
     card1.icon_=(null)

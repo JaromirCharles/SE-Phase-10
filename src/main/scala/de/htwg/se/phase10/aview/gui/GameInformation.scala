@@ -12,10 +12,11 @@ class GameInformation (controller:IController) extends Frame {
   }
   
   val turnPhase = new TextArea("Its your turn " + controller.getName() +"\nYour current Phase: " + controller.getPhaseNameNumber()._1) {
-    this.foreground_=(Color.WHITE)
-    this.font_=(this.font.deriveFont(16f))
-    this.preferredSize_=(new Dimension(200,100))
-    this.editable_=(false)
+    foreground_=(Color.WHITE)
+    font_=(this.font.deriveFont(16f))
+    preferredSize_=(new Dimension(400,100))
+    editable_=(false)
+    border = Swing.EmptyBorder(15, 15, 15, 15)
     background = color
   }
 }

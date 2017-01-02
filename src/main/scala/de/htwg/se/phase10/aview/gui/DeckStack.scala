@@ -31,10 +31,10 @@ class DeckStack (gui:createGameField, controller:IController) extends Frame {
   
   listenTo(deck,stack)
   reactions += {
-    case ButtonClicked(`stack`) if(!controller.getPullCard()) => controller.getCardStack();gui.handCards.updateHand();gui.deckStack.updateStack()
+    case ButtonClicked(`stack`) if(!controller.getPullCard()) => controller.getCardStack();gui.handCards.updateHand();gui.deckStack.updateStack();gui.player.updateButtons()
     case ButtonClicked(`stack`) if(controller.getPullCard()) => gui.infoFeld.turnPhase.text_=("You Pulled a card already!")
     case ButtonClicked(`stack`) if(controller.getStackSize() == 0) => gui.infoFeld.turnPhase.text_=("Stack is empty, sou you pulled a card from the deck!")
-    case ButtonClicked(`deck`) if(!controller.getPullCard()) => controller.getCardDeck();gui.handCards.updateHand()
+    case ButtonClicked(`deck`) if(!controller.getPullCard()) => controller.getCardDeck();gui.handCards.updateHand();gui.player.updateButtons()
     case ButtonClicked(`deck`) if(controller.getPullCard()) => gui.infoFeld.turnPhase.text_=("You Pulled a card already!")
   }
   

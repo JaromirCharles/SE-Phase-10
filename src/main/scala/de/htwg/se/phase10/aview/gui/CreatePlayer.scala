@@ -6,7 +6,8 @@ import de.htwg.se.phase10.controller.IController
 import java.awt.Color
 
 class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
-  val color = Color.LIGHT_GRAY
+  val color = new Color(0x00592D)
+  var numberPlayer = 0
   override def top = new MainFrame {
     title = "Create Player"
     preferredSize = new Dimension(640,530)
@@ -14,79 +15,138 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
     
     val labelPlayer1 = new Label {
       text = "Player name:"
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val labelPlayer2 = new Label {
       text = "Player name:"
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val labelPlayer3 = new Label {
       text = "Player name:"
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val labelPlayer4 = new Label {
       text = "Player name:"
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val inputPlayer1 = new TextField {
       text = ""
       horizontalAlignment = Alignment.Right
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val inputPlayer2 = new TextField {
       text = ""
       horizontalAlignment = Alignment.Right
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val inputPlayer3 = new TextField {
       text = ""
       horizontalAlignment = Alignment.Right
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val inputPlayer4 = new TextField {
       text = ""
       horizontalAlignment = Alignment.Right
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      border = Swing.EmptyBorder(15, 15, 15, 15)
     }
     
     val createPlayer1Button = new Button {
       action = Action("Create Player") {
+        numberPlayer += 1
+        if (numberPlayer >= 2) {
+          finishButton.enabled_=(true)
+        }
         controller.createPlayer(inputPlayer1.text)
         this.enabled_=(false)
         inputPlayer1.editable_=(false)
       }
-      this.borderPainted = true
-      this.enabled = true
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      borderPainted = true
+      enabled = true
     }
     
     val createPlayer2Button = new Button {
       action = Action("Create Player") {
+        numberPlayer += 1
+        if (numberPlayer >= 2) {
+          finishButton.enabled_=(true)
+        }
         controller.createPlayer(inputPlayer2.text)
         this.enabled_=(false)
         inputPlayer2.editable_=(false)
       }
-      this.borderPainted = true
-      this.enabled = true
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      borderPainted = true
+      enabled = true
     }
     
     val createPlayer3Button = new Button {
       action = Action("Create Player") {
+        numberPlayer += 1
+        if (numberPlayer >= 2) {
+          finishButton.enabled_=(true)
+        }
         controller.createPlayer(inputPlayer3.text)
         this.enabled_=(false)
         inputPlayer3.editable_=(false)
       }
-      this.borderPainted = true
-      this.enabled = true
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      borderPainted = true
+      enabled = true
     }
     
     val createPlayer4Button = new Button {
       action = Action("Create Player") {
+        numberPlayer += 1
+        if (numberPlayer >= 2) {
+          finishButton.enabled_=(true)
+        }
         controller.createPlayer(inputPlayer4.text)
         this.enabled_=(false)
         inputPlayer4.editable_=(false)
       }
-      
-      this.borderPainted = true
-      this.enabled = true
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
+      borderPainted = true
+      enabled = true
     }
     
     val emptyLapel1 = new Label {
@@ -104,8 +164,11 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
         dispose()
         val mainField = new MainField(controller)
       }
+      background = color
+      foreground_=(Color.WHITE)
+      font_=(this.font.deriveFont(16f))
       borderPainted = true
-      enabled = true
+      enabled = false
     }
     
     contents = new GridPanel(5,3) {
