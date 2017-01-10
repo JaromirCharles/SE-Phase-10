@@ -1,9 +1,10 @@
-//package de.htwg.se.phase10.model
+//package de.htwg.se.phase10.model.impl;
 //
 //import org.scalatest.WordSpec
 //import org.scalatest.Matchers._
 //import org.junit.runner.RunWith
 //import org.scalatest.junit.JUnitRunner
+//import scala.collection.mutable.ListBuffer
 //
 //@RunWith(classOf[JUnitRunner])
 //class scala extends WordSpec {
