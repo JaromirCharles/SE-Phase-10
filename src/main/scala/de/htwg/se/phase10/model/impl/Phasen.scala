@@ -1,16 +1,17 @@
 package de.htwg.se.phase10.model.impl
 
+import de.htwg.se.phase10.model.ICard
 import scala.collection.mutable.ListBuffer
 
 object helperMethods {
   
-  def checkSize(cards: List[Card], size:Int) : Boolean = {
+  def checkSize(cards: List[ICard], size:Int) : Boolean = {
     val special:SpecialCard= new SpecialCard(CardType.Break)
     if (cards.size != size || cards.contains(special)) return false
     return true
   }
   
-  def checkTwoGroups(cards: List[Card],number:Int) : Boolean = {
+  def checkTwoGroups(cards: List[ICard],number:Int) : Boolean = {
     var firstCard = cards(checkJoker(cards,0,number))
     var secondCard = cards(checkJoker(cards,number,number))
     for ((x,i)<-cards.zipWithIndex) {
@@ -25,7 +26,7 @@ object helperMethods {
     return true
   }
   
-  def  checkOneGroup(cards: List[Card], number:Int) : Boolean = {
+  def  checkOneGroup(cards: List[ICard], number:Int) : Boolean = {
     var firstCard = cards(checkJoker(cards,0,number))
     for ((x,i)<-cards.zipWithIndex) {
       var compareCard = cards(i)
@@ -37,7 +38,7 @@ object helperMethods {
     return checkRow(cardsRow,cardsRow.size)
   }
   
-  def checkRow(cards: List[Card],number:Int) : Boolean = {
+  def checkRow(cards: List[ICard],number:Int) : Boolean = {
     var index = checkJoker(cards,0,number)
     var currentCard = cards(index)
     if (!currentCard.isInstanceOf[NormalCard]) return true
@@ -52,7 +53,7 @@ object helperMethods {
     return true
   }
   
-  def checkColor(cards: List[Card], number:Int) : Boolean = {
+  def checkColor(cards: List[ICard], number:Int) : Boolean = {
     var index = checkJoker(cards,0,number)
     var currentCard = cards(index)
     if (!currentCard.isInstanceOf[NormalCard]) return true
@@ -65,7 +66,7 @@ object helperMethods {
     return true
   }
   
-  def checkJoker(cards: List[Card],index: Int,number: Int) : Int  = {
+  def checkJoker(cards: List[ICard],index: Int,number: Int) : Int  = {
     var in = index
     var currentCard = cards(in)
     var bool = true
@@ -81,70 +82,70 @@ object helperMethods {
 }
 
 object Phase1 extends Phase {
-  override def checkPhaseSize(cards : List[Card]) : Boolean = {
+  override def checkPhaseSize(cards : List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards,6)) return helperMethods.checkTwoGroups(cards,3)
     return false
   }
 }
 
 object Phase2 extends Phase {
-  override def checkPhaseSize(cards: List[Card]) : Boolean = {
+  override def checkPhaseSize(cards: List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards, 7)) return helperMethods.checkOneGroup(cards,3)
     return false
   }
 }
 
 object Phase3 extends Phase {
-  override def checkPhaseSize(cards: List[Card]) : Boolean = {
+  override def checkPhaseSize(cards: List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards, 8)) return helperMethods.checkOneGroup(cards,4)
     return false
   }
 }
 
 object Phase4 extends Phase {
-  override def checkPhaseSize(cards: List[Card]) : Boolean = {
+  override def checkPhaseSize(cards: List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards, 7)) return helperMethods.checkRow(cards, 7)
     return false
   }
 }
 
 object Phase5 extends Phase {
-  override def checkPhaseSize(cards: List[Card]) : Boolean = {
+  override def checkPhaseSize(cards: List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards, 8)) return helperMethods.checkRow(cards, 8)
     return false
   }
 }
 
 object Phase6 extends Phase {
-  override def checkPhaseSize(cards: List[Card]) : Boolean = {
+  override def checkPhaseSize(cards: List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards, 9)) return helperMethods.checkRow(cards, 9)
     return false
   }
 }
 
 object Phase7 extends Phase {
-  override def checkPhaseSize(cards : List[Card]) : Boolean = {
+  override def checkPhaseSize(cards : List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards,8)) return helperMethods.checkTwoGroups(cards,4)
     return false
   }
 }
 
 object Phase8 extends Phase {
-  override def checkPhaseSize(cards : List[Card]) : Boolean = {
+  override def checkPhaseSize(cards : List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards,7)) return helperMethods.checkColor(cards,7)
     return false
   }
 }
 
 object Phase9 extends Phase {
-  override def checkPhaseSize(cards : List[Card]) : Boolean = {
+  override def checkPhaseSize(cards : List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards,7)) return helperMethods.checkTwoGroups(cards,5)
     return false
   }
 }
 
 object Phase10 extends Phase {
-  override def checkPhaseSize(cards : List[Card]) : Boolean = {
+  override def checkPhaseSize(cards : List[ICard]) : Boolean = {
     if (helperMethods.checkSize(cards,8)) return helperMethods.checkTwoGroups(cards,5)
     return false
   }

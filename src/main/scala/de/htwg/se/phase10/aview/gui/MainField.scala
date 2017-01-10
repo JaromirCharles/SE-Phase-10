@@ -6,6 +6,8 @@ import de.htwg.se.phase10.util.Observer.IObserver
 import de.htwg.se.phase10.util.Observer.Event
 import de.htwg.se.phase10.controller.IController
 import de.htwg.se.phase10.controller.UpdateStack
+import de.htwg.se.phase10.controller.StartGame
+import de.htwg.se.phase10.controller.AddPlayer
 
 class MainField(controller:IController) {
   val gameField = new createGameField(controller)
@@ -13,6 +15,7 @@ class MainField(controller:IController) {
 }
 
 class createGameField(controller:IController) extends Frame with IObserver {
+  var wantToMovePhase = false
   controller.addObserver(this)
   controller.setPlayerNumber()
   val willMove = false
@@ -24,6 +27,7 @@ class createGameField(controller:IController) extends Frame with IObserver {
   val phasen = new Phasen(this,controller.getName(),controller)
   val player = new AllPlayer(this,controller)
   val color = new Color(0x00592D)
+  controller.notifyObservers
   menuBar = new MenuBar {
     contents += new Menu("Game Menu") {
       contents += new MenuItem( new Action("Exit Game ...") {
@@ -65,6 +69,7 @@ class createGameField(controller:IController) extends Frame with IObserver {
         controller.skipPlayer(controller.getName())
       }
       infoFeld.turnPhase.text_=("Its your turn " + controller.getName() +"\nYour current Phase: " + controller.getPhaseNameNumber()._1)
+      handCards.updateHand()
     }
   }
 }

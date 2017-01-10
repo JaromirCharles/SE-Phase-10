@@ -1,5 +1,6 @@
 package de.htwg.se.phase10.model.impl
 
+import de.htwg.se.phase10.model.ICard
 import de.htwg.se.phase10.model.IDeck
 
 object Deck extends IDeck {
@@ -10,7 +11,7 @@ object Deck extends IDeck {
   private val jokerCards = (1 to 8).toList.map(cardindex => SpecialCard(CardType.Joker))
   private val breakCards = (1 to 4).toList.map(cardindex => SpecialCard(CardType.Break))
   
-  var cards:List[Card] = Nil
+  var cards:List[ICard] = Nil
   
   override def createShuffleDeck {
     cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)

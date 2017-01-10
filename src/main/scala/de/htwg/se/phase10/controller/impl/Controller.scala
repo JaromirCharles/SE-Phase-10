@@ -30,8 +30,8 @@ class Controller extends Observable with IController {
   override def newGame(bool:Boolean) {
     newGameValue = bool
     if (newGameValue) {
-      notifyObservers(new StartGame())
       createStackDeck()
+      notifyObservers(new StartGame())
       gameStatus = GameStatus.NewGame
     }
   }
@@ -57,13 +57,12 @@ class Controller extends Observable with IController {
     if (Stack.stackSize == 0) {
       return "---- Empty ----"
     }
-    Stack.getTopCard().toString()
+    Stack.getTopCard.toString()
   }
   
   override def getStackSize() = Stack.stackSize
   
-  override def getStackCard() = Stack.getTopCard()
-  
+  override def getStackCard() = Stack.getTopCard  
   override def createPlayer(name:String)  {
     playerList += new Player(name)
     countPlayer += 1

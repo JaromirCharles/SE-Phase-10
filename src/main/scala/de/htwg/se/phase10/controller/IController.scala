@@ -1,6 +1,7 @@
 package de.htwg.se.phase10.controller
 
 import de.htwg.se.phase10.model.impl.Player
+import de.htwg.se.phase10.model.ICard
 import scala.collection.mutable.ListBuffer
 import de.htwg.se.phase10.model.impl.Card
 import de.htwg.se.phase10.util.Observer.IObservable
@@ -29,7 +30,7 @@ trait IController extends IObservable{
   def getStackSize() : Int
   
   //returns first card of the stack as type card to set icons
-  def getStackCard() : Card
+  def getStackCard() : ICard
   
   //Create a new Player and adds him\her to playerList
   def createPlayer(name:String)

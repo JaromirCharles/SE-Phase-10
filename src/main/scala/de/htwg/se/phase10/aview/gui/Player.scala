@@ -40,6 +40,7 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
           gui.player.updateButtons()
           controller.setPlayerNumber()
           controller.notifyObservers
+          gui.handCards.updateHand()
           dispose()
         }
       }

@@ -102,7 +102,7 @@ class PlayerHand(gui:createGameField, controller:IController) extends Frame {
     this.borderPainted_=(true)
   }
   updateHand()
-  controller.notifyObservers
+  //controller.notifyObservers
   
   listenTo(card1,card2,card3,card4,card5,card6,card7,card8,card9,card10,card11)
   
