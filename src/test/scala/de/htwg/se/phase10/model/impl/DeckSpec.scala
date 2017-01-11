@@ -25,4 +25,13 @@ class DeckSpec extends WordSpec {
         card.getIcon should not be(null)
     }
   }
+  
+  "A Deck when recreating from stack" should {
+    Deck.createShuffleDeck
+    "have a Decksize" in {
+      Stack.stack = Deck.cards
+      Deck.createDeckFromStack()
+      Deck.getDeckSize should be(107)
+    }
+  }
 }
