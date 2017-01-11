@@ -56,6 +56,11 @@ class PlayerSpec extends WordSpec {
     val player2 = new Player("Maxi")
     Deck.createShuffleDeck
     Stack.createStack()
+    
+    "have an empty hand" in {
+      player2.hand should be(Nil)
+    }
+    
     "have a hand after creating it" in {
       player2.createHand()
       player2.hand should not be(Nil)
@@ -123,6 +128,16 @@ class PlayerSpec extends WordSpec {
     "can move his move list" in {
       player3.move()
       player3.moved should be(true)
+    }
+    
+    "can be stopped" in {
+      player3.setBreak
+      player3.checkBreak should be(true)
+    }
+    
+    "can play again" in {
+      player3.setBreak
+      player3.checkBreak should be(false)
     }
   }
 }
