@@ -11,7 +11,13 @@ trait IDeck {
   def getDeckSize : Int
   
   //creates a new deck when old deck is empty  
-  def createDeckFromStack
+  def createDeckFromStack(stack:IStack)
+  
+  //remove cards from Deck
+  def dropDeck(number : Int)
+  
+  //returns list from Cards
+  def getDeck(number:Int) : List[ICard]
   
   //set all Icons in cards
   def setIcons()

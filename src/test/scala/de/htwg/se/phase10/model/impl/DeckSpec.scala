@@ -7,31 +7,34 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class DeckSpec extends WordSpec {
-  
+  var deck = new Deck()
+  deck.createShuffleDeck
   "A Deck when created" should {
-    Deck.createShuffleDeck
     "should not be Nil" in {
-      Deck.cards should not be(Nil) 
+      deck.cards should not be(Nil) 
     }
     "have a size" in {
-      Deck.getDeckSize should be(108)
+      deck.getDeckSize should be(108)
     }
   }
   
   "A Deck setIcons" should {
-    Deck.setIcons()
+    deck.setIcons()
     "have an icon" in {
-      for (card <- Deck.cards)
+      for (card <- deck.cards)
         card.getIcon should not be(null)
     }
   }
   
   "A Deck when recreating from stack" should {
-    Deck.createShuffleDeck
+    var deck2 = new Deck()
+    deck2.createShuffleDeck
+    var stack = new Stack()
+    stack.createStack(deck2)
     "have a Decksize" in {
-      Stack.stack = Deck.cards
-      Deck.createDeckFromStack()
-      Deck.getDeckSize should be(107)
+      stack.stack = deck.cards
+      deck.createDeckFromStack(stack)
+      deck.getDeckSize should be(107)
     }
   }
 }

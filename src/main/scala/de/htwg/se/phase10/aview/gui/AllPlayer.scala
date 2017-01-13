@@ -80,7 +80,7 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
     updateButtons()
     contents += player1Button
     contents += player2Button
-    contents += player3Button
+    contents += player3Button 
     contents += player4Button
     background = color
   }

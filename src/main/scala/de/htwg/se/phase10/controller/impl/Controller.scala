@@ -19,16 +19,19 @@ import de.htwg.se.phase10.model.impl.helperMethods
 
 class Controller extends Observable with IController {
   
-  private var roundOver = false
-  private var gameOver = false
-  private var gameStatus = GameStatus.Welcome 
-  private var newGameValue = false
-  private var playerNumber = 0
-  private var countPlayer = 0
-  private var playerMovedList = 0
+  private[impl] var roundOver = false
+  private[impl] var gameOver = false
+  private[impl] var gameStatus = GameStatus.Welcome 
+  private[impl] var newGameValue = false
+  private[impl] var playerNumber = 0
+  private[impl] var countPlayer = 0
+  private[impl] var playerMovedList = 0
+  
+  var stack = new Stack()
+  var deck = new Deck()
   
   override def newGame(bool:Boolean) {
-    newGameValue = bool
+    newGameValue = bool 
     if (newGameValue) {
       createStackDeck()
       notifyObservers(new StartGame())
@@ -46,25 +49,25 @@ class Controller extends Observable with IController {
   override def getStatus() = gameStatus
   
   override def createStackDeck() {
-    Deck.createShuffleDeck
+    deck.createShuffleDeck
     gameStatus = GameStatus.NewDeck
-    Stack.createStack()
+    stack.createStack(deck)
     gameStatus = GameStatus.NewStack
     notifyObservers(new UpdateStack())
   }
   
   override def getStack() : String = {
-    if (Stack.stackSize == 0) {
+    if (stack.stackSize == 0) {
       return "---- Empty ----"
     }
-    Stack.getTopCard.toString()
+    stack.getTopCard.toString()
   }
   
-  override def getStackSize() = Stack.stackSize
+  override def getStackSize() = stack.stackSize
   
-  override def getStackCard() = Stack.getTopCard  
+  override def getStackCard() = stack.getTopCard  
   override def createPlayer(name:String)  {
-    playerList += new Player(name)
+    playerList += new Player(name, deck, stack)
     countPlayer += 1
     gameStatus = GameStatus.AddPlayer
     notifyObservers(new AddPlayer())
@@ -162,8 +165,8 @@ class Controller extends Observable with IController {
   override def getPullCard() = getPlayer.pulledCard; notifyObservers
   
   override def getCardDeck() : String = {
-    if (Deck.getDeckSize == 0) 
-      Deck.createDeckFromStack()
+    if (deck.getDeckSize == 0) 
+      deck.createDeckFromStack(stack)
     var returnCard = getPlayer().takeFromDeck().toString()
     notifyObservers
     returnCard
@@ -171,12 +174,12 @@ class Controller extends Observable with IController {
   
   override def getCardStack() : String = {
     var returnCard = ""
-    if (Stack.stackSize == 0) 
+    if (stack.stackSize == 0) 
       returnCard = getPlayer().takeFromDeck().toString()
     else {
      notifyObservers(new UpdateStack())
      returnCard = getPlayer().takeFromStack().toString()
-     notifyObservers
+     notifyObservers 
     }
     returnCard
   }
@@ -322,7 +325,7 @@ class Controller extends Observable with IController {
           player.moveList.remove(player.getPhaseLength())
           player.moveList += handCard
           if (!checkAdd(player)) {
-            player.moveList.remove(player.moveList.length-1)
+            player.moveList.remove(player.moveList.length-1) 
             return false
           } else {
             getPlayer.hand -= handCard

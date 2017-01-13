@@ -2,8 +2,9 @@ package de.htwg.se.phase10.model.impl
 
 import de.htwg.se.phase10.model.ICard
 import de.htwg.se.phase10.model.IDeck
+import de.htwg.se.phase10.model.IStack
 
-object Deck extends IDeck {
+class Deck extends IDeck {
   private val colors = Array(Colors.Red, Colors.Green, Colors.Yellow, Colors.Purple)
   private val typ = 1 to 12
   private val normalCards = (1 to 2).flatMap(loop => colors.flatMap(color => (typ.map(i => NormalCard(color, i))))).toList
@@ -26,10 +27,17 @@ object Deck extends IDeck {
     
   override def getDeckSize = cards.length
   
-  override def createDeckFromStack() {
-    cards = Stack.stack.drop(1)
-    cards = scala.util.Random.shuffle(Deck.cards)
-    Stack.stack = Stack.stack.take(1)
+  override def dropDeck(number : Int) {
+    this.cards = cards.drop(number)
+  }
+  
+  override def getDeck(number:Int) = cards.take(number)
+
+  
+  override def createDeckFromStack(stack:IStack) {
+    cards = stack.allExceptFirst()
+    cards = scala.util.Random.shuffle(cards)
+    stack.removeAllExceptFirst()
   }
 }
 

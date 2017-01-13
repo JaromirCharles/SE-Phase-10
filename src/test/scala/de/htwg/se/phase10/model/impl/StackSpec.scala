@@ -7,19 +7,21 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class StackSpec extends WordSpec {
-  
+
+  var deck = new Deck()
+  deck.createShuffleDeck
+  var stack = new Stack()
+  var firstCard = deck.getDeck(1).head
+  stack.createStack(deck)
   "A Stack when created" should {
-    Deck.createShuffleDeck
-    var firstCard = Deck.cards.head
-    Stack.createStack()
     "should not be Nil" in {
-      Stack.stack should not be(Nil)
+      stack.stack should not be(Nil)
     }
     "have a size" in {
-      Stack.stackSize should be(1)
+      stack.stackSize should be(1)
     }
     "have a first card" in {
-      Stack.getTopCard should be(firstCard)
+      stack.getTopCard should be(firstCard)
     }
   }
 }

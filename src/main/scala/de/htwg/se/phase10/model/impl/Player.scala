@@ -1,10 +1,12 @@
 package de.htwg.se.phase10.model.impl
 
 import de.htwg.se.phase10.model.ICard
+import de.htwg.se.phase10.model.IDeck
+import de.htwg.se.phase10.model.IStack
 import de.htwg.se.phase10.model.IPlayer
 import scala.collection.mutable.ListBuffer
 
-class Player(playerName: String) extends IPlayer {
+class Player(playerName: String, deck: IDeck, stack:IStack) extends IPlayer {
   val name = playerName
   var moved = false
   var phase : Phase = Phase1
@@ -17,9 +19,9 @@ class Player(playerName: String) extends IPlayer {
   
   def createHand() {
      hand.clear()
-     val handHelp = Deck.cards.take(10)
-     for(x <- handHelp) hand += x
-     Deck.cards = Deck.cards.drop(10)
+     val handHelp = deck.getDeck(10)
+     for(card <- handHelp) hand += card
+     deck.dropDeck(10)
   }
   
   override def getPhaseLength() = phaseLength
@@ -41,24 +43,24 @@ class Player(playerName: String) extends IPlayer {
   override def move() = if (phase.checkPhaseSize(moveList.toList))  moved = true
 
   override def takeFromDeck() : ICard = {
-    val drawnCard = Deck.cards.head
-    Deck.cards = Deck.cards.drop(1)
+    val drawnCard = deck.getDeck(1).head
+    deck.dropDeck(1)
     hand += drawnCard
     pulledCard = true
     return drawnCard
   }
   
   override def takeFromStack() : ICard = {
-    val drawnCard = Stack.stack.head
+    val drawnCard = stack.getTopCard
     hand += drawnCard
-    Stack.stack = Stack.stack.drop(1)
+    stack.removeCard(1)
     pulledCard = true
     return drawnCard
   }
   
   override def dropToStack(card:ICard) : ICard = {
     hand -= card
-    Stack.stack = Stack.stack.::(card)
+    stack.addToStack(card)
     pulledCard = false
     card
   }

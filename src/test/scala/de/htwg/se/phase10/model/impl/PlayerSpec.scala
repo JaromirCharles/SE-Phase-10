@@ -7,9 +7,11 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class PlayerSpec extends WordSpec {
+  
   "A Player" should {
-    
-    val player = new Player("Jaromir")
+    var stack = new Stack()
+    var deck = new Deck()
+    val player = new Player("Jaromir", deck , stack)
     
     "have a name" in {
       player.name should be ("Jaromir")
@@ -53,15 +55,17 @@ class PlayerSpec extends WordSpec {
   }
   
   "A player" should {
-    val player2 = new Player("Maxi")
-    Deck.createShuffleDeck
-    Stack.createStack()
+    var stack = new Stack()
+    var deck = new Deck()
+    val player2 = new Player("Maxi",deck,stack)
     
     "have an empty hand" in {
       player2.hand should be(Nil)
     }
     
     "have a hand after creating it" in {
+     deck.createShuffleDeck
+     stack.createStack(deck)
       player2.createHand()
       player2.hand should not be(Nil)
     }
@@ -91,7 +95,7 @@ class PlayerSpec extends WordSpec {
     }
     
     "takes a card from deck" in {
-      var firstCardDeck = Deck.cards.head
+      var firstCardDeck = deck.cards.head
       player2.takeFromDeck() should be(firstCardDeck)
       player2.handSize should be(11)
       player2.pulledCard should be(true)
@@ -102,11 +106,11 @@ class PlayerSpec extends WordSpec {
       player2.dropToStack(player2.hand(10)) should be(dropCard)
       player2.handSize should be(10)
       player2.pulledCard should be(false)
-      Stack.stack.head should be(dropCard)
+      stack.stack.head should be(dropCard)
     }
     
     "takes a card from stack" in {
-      var firstCardstack = Stack.stack.head
+      var firstCardstack = stack.stack.head
       player2.takeFromStack() should be(firstCardstack)
       player2.handSize should be(11)
       player2.pulledCard should be(true)
@@ -114,7 +118,9 @@ class PlayerSpec extends WordSpec {
   }
   
   "A player" should {
-    val player3 = new Player("Nico")
+    var stack = new Stack()
+    var deck = new Deck()
+    val player3 = new Player("Nico", deck ,stack)
     "can add a card to move List" in {
       player3.addCard(NormalCard(Colors.Green,10))
       player3.addCard(NormalCard(Colors.Yellow,10))

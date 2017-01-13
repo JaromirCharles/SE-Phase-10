@@ -4,6 +4,7 @@ import org.scalatest.WordSpec
 import org.scalatest.Matchers._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.Finders
 
 @RunWith(classOf[JUnitRunner])
 class NormalCardSpec extends WordSpec {
