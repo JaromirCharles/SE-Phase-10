@@ -76,7 +76,7 @@ class Tui(var controller:IController) extends IObserver {
       return true
     }
     if (numberPlayerCount > numberOfPlayer) {
-      controller.newGame(false)
+      controller.newGame(false) 
       controller.givePlayerHandCards()
       controller.setPlayerNumber()
       printGameField(controller.getName())

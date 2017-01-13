@@ -88,6 +88,12 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
     
     def phase = new FlowPanel() {
       contents += addCard1
+      for(card <- controller.getPlayer(playerName).moveList) {
+        contents += new Label {
+          preferredSize_=(new Dimension(100,120))
+          icon_=(card.getIcon)
+        }
+      }
       contents += addCard2
       background = color
     }

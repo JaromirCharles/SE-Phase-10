@@ -49,7 +49,7 @@ class createGameField(controller:IController) extends Frame with IObserver {
   }
   title = "Gamefield"
   preferredSize = new Dimension(2560,1540)
-  resizable_= (false)
+  resizable_= (true)
     
   def exitMenu(parent:Component) {
     val res = Dialog.showConfirmation(parent, "Do you really want to quit?",

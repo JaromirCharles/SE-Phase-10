@@ -21,7 +21,7 @@ class Controller extends Observable with IController {
   
   private var roundOver = false
   private var gameOver = false
-  private var gameStatus = GameStatus.Welcome
+  private var gameStatus = GameStatus.Welcome 
   private var newGameValue = false
   private var playerNumber = 0
   private var countPlayer = 0
@@ -176,6 +176,7 @@ class Controller extends Observable with IController {
     else {
      notifyObservers(new UpdateStack())
      returnCard = getPlayer().takeFromStack().toString()
+     notifyObservers
     }
     returnCard
   }
@@ -185,6 +186,7 @@ class Controller extends Observable with IController {
     notifyObservers(new UpdateStack())
     if (finishedRound()) roundOver = true
     if (finishedGame()) gameOver = true
+    notifyObservers
     return dropCard
   }
   
@@ -277,6 +279,14 @@ class Controller extends Observable with IController {
   override def getGameOver() = gameOver
   
   override def getPlayer() = playerList(playerNumber)
+  
+  override def getPlayer(name:String) : Player = {
+    var retPlayer:Player = null
+    for (player <- playerList)
+      if (player.name.equals(name))
+        retPlayer = player
+    return retPlayer
+  }
   
   override def startNewRound() {
     setNextPhase()

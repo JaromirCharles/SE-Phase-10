@@ -27,7 +27,7 @@ class PlayerHand(gui:createGameField, controller:IController) extends Frame {
       
     }
     this.preferredSize_=(new Dimension(100,120))
-    this.opaque_=(false)
+    this.opaque_=(false) 
     this.contentAreaFilled_=(false)
     this.borderPainted_=(true)
   }
@@ -101,8 +101,8 @@ class PlayerHand(gui:createGameField, controller:IController) extends Frame {
     this.contentAreaFilled_=(false)
     this.borderPainted_=(true)
   }
+  
   updateHand()
-  //controller.notifyObservers
   
   listenTo(card1,card2,card3,card4,card5,card6,card7,card8,card9,card10,card11)
   

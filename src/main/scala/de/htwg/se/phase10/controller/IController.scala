@@ -32,6 +32,9 @@ trait IController extends IObservable{
   //returns first card of the stack as type card to set icons
   def getStackCard() : ICard
   
+  //returns the player from name
+  def getPlayer(name:String) : Player
+  
   //Create a new Player and adds him\her to playerList
   def createPlayer(name:String)
   

@@ -7,35 +7,7 @@ import javax.imageio.ImageIO
 import javax.swing.WindowConstants.DISPOSE_ON_CLOSE
 import de.htwg.se.phase10.controller.IController
 import javafx.stage.Window
-
-class ImagePanel extends Panel                                                
-{
-  private var _imagePath = ""                                                 
-  private var bufferedImage:BufferedImage = null                              
-
-  def imagePath = _imagePath                                                  
-
-  def imagePath_=(value:String)                                               
-  {                                                                           
-    _imagePath = value                                                        
-    bufferedImage = ImageIO.read(new File(_imagePath))                        
-  }                                                                           
-
-  override def paintComponent(g:Graphics2D) =                                 
-  {     
-    val h = bufferedImage.getHeight
-    val w = bufferedImage.getWidth
-    if (null != bufferedImage) {
-        g.drawImage(bufferedImage, 0, 0, w, h, null)  
-    }
-  } 
-  
-}                                                                             
-
-object ImagePanel                                                             
-{                                                                             
-  def apply() = new ImagePanel()                                              
-} 
+import java.awt.Color
 
 class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication {
   
@@ -56,9 +28,32 @@ class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication 
         })
       }
     }
-    contents = new ImagePanel {
+    contents = new ImagePanel(2,1) {
       imagePath = ("./img/Phase10MainMenu.jpeg")
       border = Swing.EmptyBorder(15,15,15,15)
+      contents += new FlowPanel() {
+        contents += new Button("New Game"){
+          this.preferredSize = new Dimension(300,100)
+          this.opaque_=(false)
+          this.contentAreaFilled_=(false)
+          this.borderPainted_=(true)
+          this.foreground_=(Color.RED)
+          font_=(this.font.deriveFont(30f))
+        }
+        this.opaque_=(false)
+      }
+      
+      contents += new FlowPanel() {
+        contents += new Button("Exit Game"){
+          this.preferredSize = new Dimension(300,100)
+          this.opaque_=(false)
+          this.contentAreaFilled_=(false)
+          this.borderPainted_=(true)
+          this.foreground_=(Color.RED)
+          font_=(this.font.deriveFont(30f))
+        }
+        this.opaque_=(false)
+      }
     }  
   }
   
@@ -67,7 +62,7 @@ class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication 
     val createPlayer = new CreatePlayer(controller)
     createPlayer.top.visible_=(true)
   }
-  
+
   def exitMenu(parent:Component) {
     val res = Dialog.showConfirmation(parent, "Do you really want to quit?",
         optionType=Dialog.Options.YesNo,title="Exit Game")
@@ -77,6 +72,39 @@ class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication 
     }
   }
 }
+
+
+
+class ImagePanel(rows0: Int, cols0: Int) extends GridPanel(rows0, cols0) {
+
+  private var _imagePath = ""                                                
+
+  private var buf = Option.empty[BufferedImage]
+
+  def imagePath = _imagePath
+
+  def imagePath_=(value: String): Unit = {
+
+    _imagePath = value
+
+    buf.foreach(_.flush()); buf = None
+
+    buf = Some(ImageIO.read(new File(value)))
+
+    repaint()
+
+  }
+
+  override def paintComponent(g: Graphics2D): Unit = {
+
+    super.paintComponent(g)
+
+    buf.foreach(g.drawImage(_, 0, 0, null))
+
+  }
+
+}
+
 class MainMenu(var controller:IController) {
   val imagePanel = new ImagePanelDemo(controller)
   imagePanel.top.pack()

@@ -48,7 +48,7 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
     action = Action("") {
       for ((value,index) <- controller.getPlayerTurn().zipWithIndex) {
         index match {
-          case 2 =>var player = new Player(gui,value,controller);player.top.visible_=(true)
+          case 2 =>var player = new Player(gui,value,controller);player.top.visible_=(true);
           case default =>
         }
       }
