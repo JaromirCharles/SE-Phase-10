@@ -15,14 +15,14 @@ class PlayerListSpec extends WordSpec {
     controller.createPlayer("Jaromir")
     controller.createPlayer("Maxi")
     "have a size" in {
-      PlayerList.playerList.size should be (2)
+      controller.playerList.playerList.size should be (2)
     }
     "have two players" in {
-      PlayerList.playerList(0).name should be ("Jaromir")
-      PlayerList.playerList(1).name should be ("Maxi")
+      controller.playerList.playerList(0).name should be ("Jaromir")
+      controller.playerList.playerList(1).name should be ("Maxi")
     }
     "not be empty" in {
-      PlayerList.playerList.isEmpty should be (false)
+      controller.playerList.playerList.isEmpty should be (false)
     }
   }
 }
