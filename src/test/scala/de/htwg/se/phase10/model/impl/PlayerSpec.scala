@@ -121,6 +121,7 @@ class PlayerSpec extends WordSpec {
     var stack = new Stack()
     var deck = new Deck()
     val player3 = new Player("Nico", deck ,stack)
+    val player4 = new Player("Artur", deck ,stack)
     "can add a card to move List" in {
       player3.addCard(NormalCard(Colors.Green,10))
       player3.addCard(NormalCard(Colors.Yellow,10))
@@ -129,11 +130,22 @@ class PlayerSpec extends WordSpec {
       player3.addCard(NormalCard(Colors.Red,9))
       player3.addCard(NormalCard(Colors.Purple,9))
       player3.moveList.size should be(6)
+      
+      player4.addCard(NormalCard(Colors.Green,11))
+      player4.addCard(NormalCard(Colors.Yellow,10))
+      player4.addCard(SpecialCard(CardType.Joker))
+      player4.addCard(SpecialCard(CardType.Joker))
+      player4.addCard(NormalCard(Colors.Red,9))
+      player4.addCard(NormalCard(Colors.Purple,9))
+      player4.moveList.size should be(6)
     }
     
     "can move his move list" in {
       player3.move()
       player3.moved should be(true)
+      
+      player4.move()
+      player4.moved should be(false)
     }
     
     "can be stopped" in {
