@@ -2,13 +2,20 @@ package de.htwg.se.phase10.aview.gui
 
 import swing._
 import java.awt.GridLayout
+import de.htwg.se.phase10.util.Observer.IObserver
+import de.htwg.se.phase10.util.Observer.Event
 import de.htwg.se.phase10.controller.IController
+import de.htwg.se.phase10.controller.AddPlayer
 import java.awt.Color
 
-class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
+class CreatePlayer(var controller:IController) extends SimpleSwingApplication with IObserver {
+  
+  controller.addObserver(this)
+  
   val color = new Color(0x00592D)
   var numberPlayer = 0
-  override def top = new MainFrame {
+  
+  var createPlayer = new MainFrame {
     title = "Create Player"
     preferredSize = new Dimension(640,530)
     resizable_=(false)
@@ -84,7 +91,7 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
     val createPlayer1Button = new Button {
       action = Action("Create Player") {
         numberPlayer += 1
-        if (numberPlayer >= 2) {
+        if (numberPlayer >= 2 && controller.getNumberAllPlayer == 0) {
           finishButton.enabled_=(true)
         }
         controller.createPlayer(inputPlayer1.text)
@@ -101,7 +108,7 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
     val createPlayer2Button = new Button {
       action = Action("Create Player") {
         numberPlayer += 1
-        if (numberPlayer >= 2) {
+        if (numberPlayer >= 2 && controller.getNumberAllPlayer == 0) {
           finishButton.enabled_=(true)
         }
         controller.createPlayer(inputPlayer2.text)
@@ -118,7 +125,7 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
     val createPlayer3Button = new Button {
       action = Action("Create Player") {
         numberPlayer += 1
-        if (numberPlayer >= 2) {
+        if (numberPlayer >= 2 && controller.getNumberAllPlayer == 0) {
           finishButton.enabled_=(true)
         }
         controller.createPlayer(inputPlayer3.text)
@@ -135,7 +142,7 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
     val createPlayer4Button = new Button {
       action = Action("Create Player") {
         numberPlayer += 1
-        if (numberPlayer >= 2) {
+        if (numberPlayer >= 2 && controller.getNumberAllPlayer == 0) {
           finishButton.enabled_=(true)
         }
         controller.createPlayer(inputPlayer4.text)
@@ -160,9 +167,7 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
     
     val finishButton = new Button {
       action = Action("Start Game") {
-        controller.newGame(false)
-        dispose()
-        val mainField = new MainField(controller)
+        startGame
       }
       background = color
       foreground_=(Color.WHITE)
@@ -203,15 +208,32 @@ class CreatePlayer(var controller:IController) extends SimpleSwingApplication {
         })
       }
     }
-    
-    def exitMenu(parent:Component) {
-      val res = Dialog.showConfirmation(parent, "Do you really want to quit?",
-        optionType=Dialog.Options.YesNo,title="Exit Game")
-      if (res == Dialog.Result.Yes) {
-        controller.quitGame()
-        sys.exit(0)
-      }
-      else if (res == Dialog.Result.No) return
-    }
   }
+  
+  def startGame() {
+    controller.newGame(false)
+    createPlayer.dispose()
+    val mainField = new MainField(controller)
+    }
+    
+  def exitMenu(parent:Component) {
+    val res = Dialog.showConfirmation(parent, "Do you really want to quit?",
+        optionType=Dialog.Options.YesNo,title="Exit Game")
+    if (res == Dialog.Result.Yes) {
+      controller.quitGame()
+      sys.exit(0)
+    }
+    else if (res == Dialog.Result.No) return
+  }
+  
+  override def top = createPlayer
+  
+    override def update(e:Event) {
+      if (e.isInstanceOf[AddPlayer]) {
+        numberPlayer += 1
+        if (numberPlayer >= 2 && numberPlayer == controller.getNumberAllPlayer) {
+          startGame
+        }
+      }
+    }
 }

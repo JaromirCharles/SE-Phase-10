@@ -25,6 +25,7 @@ class Controller extends Observable with IController {
   private[impl] var playerNumber = 0
   private[impl] var countPlayer = 0
   private[impl] var playerMovedList = 0
+  private[impl] var numberAllPlayer = 0
  
   var playerList = new PlayerList()
   var stack = new Stack()
@@ -45,6 +46,10 @@ class Controller extends Observable with IController {
     notifyObservers(new ExitGame())
     gameStatus = GameStatus.ExitGame
   }
+  
+  override def getNumberAllPlayer = numberAllPlayer
+  
+  override def setNumberAllPlayer(number:Int) = numberAllPlayer = number
   
   override def getStatus() = gameStatus
   

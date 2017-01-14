@@ -129,6 +129,20 @@ class PlayerHand(gui:createGameField, controller:IController) extends Frame {
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
     case ButtonClicked(`card11`) if (controller.getPullCard() && card11.icon != null && !gui.willMove) => controller.dropCardStack(11);updateHand()
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
+    
+    case ButtonClicked(`card1`) if (card1.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(1);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card2`) if (card2.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(2);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card3`) if (card3.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(3);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card4`) if (card4.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(4);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card5`) if (card5.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(5);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card6`) if (card6.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(6);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card7`) if (card7.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(7);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card8`) if (card8.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(8);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card9`) if (card9.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(9);updateHand();gui.move.updateMove;controller.notifyObservers
+    case ButtonClicked(`card10`) if (card10.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(10);updateHand();gui.move.updateMove;controller.notifyObservers 
+    case ButtonClicked(`card11`) if (card11.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(11);updateHand();gui.move.updateMove;controller.notifyObservers
+    
+    case ButtonClicked(_) if (gui.willMove && !gui.move.checkMoveList) => gui.infoFeld.turnPhase.text_=("Move list is full!")
     case ButtonClicked(_) => gui.infoFeld.turnPhase.text_=("Not a correct move!")
   }
   

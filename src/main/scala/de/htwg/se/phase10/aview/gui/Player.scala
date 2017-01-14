@@ -60,6 +60,9 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
           gui.infoFeld.turnPhase.text_=("Do the phase first!")
           dispose()
         }
+        else {
+          
+        }
       }
     }
     

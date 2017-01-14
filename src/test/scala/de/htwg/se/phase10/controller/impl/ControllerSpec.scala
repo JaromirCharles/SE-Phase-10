@@ -11,6 +11,7 @@ import de.htwg.se.phase10.model.impl.Colors
 import de.htwg.se.phase10.model.impl.NormalCard
 import de.htwg.se.phase10.model.impl.SpecialCard
 import de.htwg.se.phase10.model.impl.CardType
+import de.htwg.se.phase10.model._
 
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec {
@@ -243,10 +244,83 @@ class ControllerSpec extends WordSpec {
       controller.setPlayerNumber()
       controller.setPlayerNumber()
     }
+    
+    "drop a card to stack" in {
+      val dropCard = controller.getPlayer().hand(0)
+      controller.dropCardStack(1) should be(dropCard.toString())
+    }
+    
+    "drop a card to stack and finishRound" in {
+      val list = new ListBuffer[ICard]
+      list += NormalCard(Colors.Green, 10)
+      controller.getPlayer().hand = list
+      controller.dropCardStack(1)should be("Green 10")
+      controller.roundOver should be(true)
+    }
+    
+    "drop a card to stack and finishGame" in {
+      controller.getPlayer().checkPhase = 10
+      val list = new ListBuffer[ICard]
+      list += NormalCard(Colors.Green, 10)
+      controller.getPlayer().hand = list
+      controller.dropCardStack(1)should be("Green 10")
+      controller.gameOver should be(true)
+    }
+    
+    "should be stopped" in {
+      controller.getPlayer().setBreak
+      controller.getBreak(controller.getPlayer().name) should be(true)
+      controller.skipPlayer(controller.getPlayer().name)
+    }
+    
+    "should not be stopped" in {
+      controller.getBreak(controller.getPlayer().name) should be(false)
+      controller.createPlayer("nico")
+      controller.getBreak("nico") should be(false)
+      controller.skipPlayer("nico")
+    }
+    
+    "stop someone" in {
+      controller.stopPlayer(2)
+      controller.stopPlayer(2)
+      controller.stopPlayer(1)
+      controller.stopPlayer(1)
+    }
+    
+    "have a break card on his hand" in {
+      controller.getPlayer().hand.+=(SpecialCard(CardType.Joker))
+      controller.getPlayer().hand.+=(SpecialCard(CardType.Break))
+      controller.checkRemoveBreak() should be(true)
+    }
+    
+    "have not break card on his hand" in {
+      controller.getPlayer().hand.clear()
+      controller.checkRemoveBreak() should be(false)
+      controller.getPlayer().hand += SpecialCard(CardType.Joker)
+      controller.checkRemoveBreak() should be(false)
+    }
   }
   
   "A game" should {
     var controller = new Controller()
+    controller.createPlayer("Nico")
+    controller.createPlayer("Artur")
+    
+    "return a Player for a name" in {
+      controller.getPlayer(controller.getPlayer().name) should be(controller.getPlayer())
+    }
+    
+    "should start a new Round" in {
+      controller.startNewRound()
+    }
+    
+    "set the next phase for the player" in {
+      for (i <- 1 to 10) {
+        controller.getPlayer("Nico").moved = true
+        controller.getPlayer("Artur").checkPhase = i
+        controller.setNextPhase()
+      }
+    }
     
     "have a false roundOver" in {
       controller.getRoundOver() should be(false)
@@ -255,7 +329,34 @@ class ControllerSpec extends WordSpec {
     "have a false gameOver" in {
       controller.getGameOver() should be(false)
     }
-
   }
   
+  "Some player" should {
+    var controller = new Controller()
+    controller.createPlayer("Maxi")
+    controller.createPlayer("Jaromir")
+    controller.createPlayer("Artur")
+    controller.deck.createShuffleDeck
+    controller.stack.createStack(controller.deck)
+    
+    val liste = new ListBuffer[ICard]
+    liste += NormalCard(Colors.Green, 6)
+    liste += NormalCard(Colors.Yellow, 6)
+    liste += NormalCard(Colors.Red, 6)
+    liste += NormalCard(Colors.Green, 7)
+    liste += NormalCard(Colors.Green, 7)
+    liste += NormalCard(Colors.Purple, 7)
+    
+    controller.getPlayer("Artur").hand += NormalCard(Colors.Purple, 7)
+    controller.getPlayer("Maxi").hand = liste
+    controller.getPlayer("Maxi").hand += NormalCard(Colors.Purple, 7)
+    controller.getPlayer("Maxi").hand += NormalCard(Colors.Purple, 7)
+    controller.getPlayer("Jaromir").hand = liste
+    controller.getPlayer("Jaromir").hand += NormalCard(Colors.Green, 1)
+    controller.getPlayer("Maxi").hand += NormalCard(Colors.Purple, 7)
+    
+    "do their phase" in {
+      
+    }
+  }
 }

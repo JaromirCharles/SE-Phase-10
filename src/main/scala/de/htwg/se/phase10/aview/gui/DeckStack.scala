@@ -22,11 +22,11 @@ class DeckStack (gui:createGameField, controller:IController) extends Frame {
   }
   
   val stack = new Button {
-    this.preferredSize_=(new Dimension(100,120))
-    this.borderPainted_=(true)
-    this.selectedIcon_=(null)
-    this.opaque_=(false)
-    this.contentAreaFilled_=(false)
+    preferredSize_=(new Dimension(100,120))
+    borderPainted_=(true)
+    icon_=(controller.getStackCard().getIcon)
+    opaque_=(false)
+    contentAreaFilled_=(false)
   }
   
   listenTo(deck,stack)

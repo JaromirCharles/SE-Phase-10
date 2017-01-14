@@ -27,7 +27,7 @@ class Tui(var controller:IController) extends IObserver {
       controller.newGame(true)
     } else if (input.equals("2") && controller.getStatus().equals(GameStatus.Welcome)) {
       printQuitMenu()
-      return false
+      sys.exit(0)
     } else {
       return checkInput(input)
     }
@@ -50,6 +50,7 @@ class Tui(var controller:IController) extends IObserver {
     if (controller.checkNewGame() && numberOfPlayer == 1) {
       try {
         numberOfPlayer = input.toInt
+        controller.setNumberAllPlayer(numberOfPlayer)
       } catch {
         case inputString : NumberFormatException => println("Only numbers between 2 - 4 are allowed!")
         printNumberPlayer()

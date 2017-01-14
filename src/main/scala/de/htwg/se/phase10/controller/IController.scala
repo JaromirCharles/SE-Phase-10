@@ -17,6 +17,12 @@ trait IController extends IObservable{
   //quits the game
   def quitGame()
   
+  //returns the number of all Player
+  def getNumberAllPlayer : Int
+  
+  //sets the number of all Player
+  def setNumberAllPlayer(number:Int)
+  
   //returns status of the game 
   def getStatus() : GameStatus.Value
   
