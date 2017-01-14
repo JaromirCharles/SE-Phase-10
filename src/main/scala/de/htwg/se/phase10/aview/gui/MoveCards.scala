@@ -7,9 +7,9 @@ import de.htwg.se.phase10.controller.IController
 
 class MoveCards(gui:createGameField,controller:IController) extends SimpleSwingApplication {
   val color = new Color(0x00592D)
-  
+
   override def top = new MainFrame {
-    
+
     def cards = new FlowPanel {
       if (controller.getPhaseNameNumber()._2 == 6) {
         contents += button1
@@ -48,7 +48,7 @@ class MoveCards(gui:createGameField,controller:IController) extends SimpleSwingA
       }
       background = color
      }
-    
+
     var ReturnButton = new Button {
       background = color
       foreground_=(Color.WHITE)
@@ -61,7 +61,7 @@ class MoveCards(gui:createGameField,controller:IController) extends SimpleSwingA
         dispose()
       }
     }
-    
+
     var moveButton = new Button {
       background = color
       foreground_=(Color.WHITE)
@@ -86,73 +86,73 @@ class MoveCards(gui:createGameField,controller:IController) extends SimpleSwingA
         }
       }
     }
-    
+
     def buttons = new FlowPanel {
       contents += ReturnButton
       contents += moveButton
       background_=(color)
     }
-    
+
     contents = new BorderPanel() {
       layout(cards) = BorderPanel.Position.Center
       layout(buttons) = BorderPanel.Position.South
     }
-    
+
     background = color
     title = "Move list"
     preferredSize = new Dimension(2560,1040)
     resizable_= (false)
   }
-  
+
   var button1 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button2 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button3 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button4 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button5 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button6 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button7 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
     contentAreaFilled_=(false)
     borderPainted_=(true)
   }
-  
+
   var button8 = new Button {
     preferredSize_=(new Dimension(100,120))
     opaque_=(false)
@@ -174,7 +174,7 @@ class MoveCards(gui:createGameField,controller:IController) extends SimpleSwingA
     else if (controller.getPhaseNameNumber()._2 == 9 && button9.icon != null) return false
     return true
   }
-  
+
   def updateMove {
 
     button1.icon_=(null)

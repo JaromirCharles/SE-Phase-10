@@ -7,7 +7,7 @@ import de.htwg.se.phase10.controller.IController
 class Player(gui:createGameField, playerName:String, controller:IController) extends SimpleSwingApplication {
   val color = new Color(0x00592D)
   override def top = new MainFrame {
-    
+
     val returnButton = new Button {
       background = color
       foreground_=(Color.WHITE)
@@ -18,7 +18,7 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
         controller.notifyObservers
       }
     }
-    
+
     val stopPlayer = new Button {
       background = color
       foreground_=(Color.WHITE)
@@ -45,7 +45,7 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
         }
       }
     }
-    
+
     val addCard1 = new Button {
       background = color
       foreground_=(Color.WHITE)
@@ -65,7 +65,7 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
         }
       }
     }
-    
+
     val addCard2 = new Button {
       background = color
       foreground_=(Color.WHITE)
@@ -82,13 +82,13 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
         }
       }
     }
-    
+
     def buttons = new FlowPanel() {
       contents += returnButton
       contents += stopPlayer
       background = color
     }
-    
+
     def phase = new FlowPanel() {
       contents += addCard1
       for(card <- controller.getPlayer(playerName).moveList) {
@@ -100,12 +100,12 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
       contents += addCard2
       background = color
     }
-    
+
     contents = new BorderPanel() {
       layout(buttons) = BorderPanel.Position.South
       layout(phase) = BorderPanel.Position.Center
     }
-    
+
     background = color
     title = "Player"
     preferredSize = new Dimension(2560,1040)

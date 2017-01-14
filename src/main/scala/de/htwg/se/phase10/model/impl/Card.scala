@@ -6,6 +6,7 @@ import de.htwg.se.phase10.model.ICard
 trait Card extends ICard 
 
 case class NormalCard(color: Colors.Value, cardtype: Int) extends Card {
+
   var icon:ImageIcon = null
   override def getRank = this.cardtype
   override def getColor = this.color.toString()
@@ -17,6 +18,7 @@ case class NormalCard(color: Colors.Value, cardtype: Int) extends Card {
 }
 
 case class SpecialCard(typeCard: CardType.Value) extends Card {
+
   var icon:ImageIcon = null
   override def getRank = this.typeCard
   override def getColor = "Blau"
@@ -34,4 +36,3 @@ object Colors extends Enumeration {
 object CardType extends Enumeration {
   val Joker, Break = Value
 }
-

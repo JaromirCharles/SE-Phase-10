@@ -14,9 +14,9 @@ import javafx.stage.Window
 import java.awt.Color
 
 class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication  with IObserver {
-  
+
   controller.addObserver(this)
-  
+
   val mainMenu = new MainFrame {
     title = "Phase 10 Main Menu"
     preferredSize = new Dimension(640,530)
@@ -50,7 +50,7 @@ class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication 
         }
         opaque_=(false)
       }
-      
+
       contents += new FlowPanel() {
         contents += new Button {
           this.preferredSize = new Dimension(300,100)
@@ -67,9 +67,9 @@ class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication 
       }
     }
   }
-  
+
   override def top = mainMenu
-  
+
   def startGame = controller.newGame(true)
 
   def exitMenu(parent:Component) {
@@ -83,7 +83,7 @@ class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication 
       return
     }
   }
-  
+
    override def update(e:Event) {
     if (e.isInstanceOf[StartGame]) {
       mainMenu.dispose()
@@ -97,7 +97,7 @@ class ImagePanel(rows0: Int, cols0: Int) extends GridPanel(rows0, cols0) {
 
   private var _imagePath = ""                                                
   private var buf = Option.empty[BufferedImage]
-  
+
   def imagePath = _imagePath
 
   def imagePath_=(value: String): Unit = {

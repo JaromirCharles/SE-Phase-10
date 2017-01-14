@@ -36,9 +36,9 @@ class createGameField(controller:IController) extends Frame with IObserver {
       })
     }
   }
-  
+
   val phasenOwerview = new ImageIcon(new ImageIcon("./img/phasen.jpg").getImage().getScaledInstance(100,120, java.awt.Image.SCALE_SMOOTH))
-  
+
   contents = new BorderPanel() {
     background = color
     border = Swing.EmptyBorder(15,15,15,15)
@@ -51,7 +51,7 @@ class createGameField(controller:IController) extends Frame with IObserver {
   title = "Gamefield"
   preferredSize = new Dimension(2560,1540)
   resizable_= (true)
-    
+
   def exitMenu(parent:Component) {
     val res = Dialog.showConfirmation(parent, "Do you really want to quit?",
       optionType=Dialog.Options.YesNo,title="Exit Game")
@@ -61,7 +61,7 @@ class createGameField(controller:IController) extends Frame with IObserver {
     }
     else if (res == Dialog.Result.No) return
   }
-  
+
   override def update(e:Event) {
     if (e.isInstanceOf[UpdateStack]) {
       deckStack.updateStack()

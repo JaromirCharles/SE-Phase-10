@@ -4,8 +4,9 @@ import de.htwg.se.phase10.controller.impl.Controller
 import scala.collection.mutable.ListBuffer
 
 object CardWorksheet {
+
 	var controller = new Controller           //> controller  : de.htwg.se.phase10.controller.impl.Controller = de.htwg.se.pha
-                                                  //| se10.controller.impl.Controller@531be3c5
+                                                  //| se10.controller.impl.Controller@6615435c
 	controller.createPlayer("jaromir")
 	controller.createPlayer("maxi")
 	controller.givePlayerHandCards()

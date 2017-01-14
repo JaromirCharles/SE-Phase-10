@@ -70,7 +70,7 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
       }
     }
   }
-  
+
   def allPlayer = new BorderPanel() {
     layout(buttons) = BorderPanel.Position.North
     background = color

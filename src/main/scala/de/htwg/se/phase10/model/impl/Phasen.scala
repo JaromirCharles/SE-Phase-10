@@ -10,7 +10,7 @@ object helperMethods {
     if (cards.size != size || cards.contains(special)) return false
     return true
   }
-  
+
   def checkTwoGroups(cards: List[ICard],number:Int) : Boolean = {
     var firstCard = cards(checkJoker(cards,0,number))
     var secondCard = cards(checkJoker(cards,number,number))
@@ -25,7 +25,7 @@ object helperMethods {
     }
     return true
   }
-  
+
   def  checkOneGroup(cards: List[ICard], number:Int) : Boolean = {
     var firstCard = cards(checkJoker(cards,0,number))
     for ((x,i)<-cards.zipWithIndex) {
@@ -37,7 +37,7 @@ object helperMethods {
     var cardsRow = cards.drop(number)
     return checkRow(cardsRow,cardsRow.size)
   }
-  
+
   def checkRow(cards: List[ICard],number:Int) : Boolean = {
     var index = checkJoker(cards,0,number)
     var currentCard = cards(index)
@@ -52,7 +52,7 @@ object helperMethods {
     }
     return true
   }
-  
+
   def checkColor(cards: List[ICard], number:Int) : Boolean = {
     var index = checkJoker(cards,0,number)
     var currentCard = cards(index)
@@ -65,7 +65,7 @@ object helperMethods {
     }
     return true
   }
-  
+
   def checkJoker(cards: List[ICard],index: Int,number: Int) : Int  = {
     var in = index
     var currentCard = cards(in)
@@ -150,4 +150,3 @@ object Phase10 extends Phase {
     return false
   }
 }
-
