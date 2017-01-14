@@ -17,3 +17,4 @@ libraryDependencies ++= {
 
 libraryDependencies += "junit" % "junit" % "4.8" % "test"
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
+libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
