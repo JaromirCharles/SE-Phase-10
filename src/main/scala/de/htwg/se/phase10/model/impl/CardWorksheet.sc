@@ -14,5 +14,6 @@ object CardWorksheet {
 	for (player <- controller.playerList.playerList) {
 		println(player.hand)              //> ListBuffer()
                                                   //| ListBuffer()
+	
 	}
 }

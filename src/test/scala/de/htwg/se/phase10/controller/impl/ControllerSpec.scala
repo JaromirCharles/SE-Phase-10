@@ -46,6 +46,10 @@ class ControllerSpec extends WordSpec {
     "have a playerMovedList" in {
       controller.playerMovedList should be(0)
     }
+    
+    "have a numberAllPlayer" in {
+      controller.numberAllPlayer should be(0)
+    }
 
     "start a newGame" in {
       controller.newGame(true)
@@ -65,6 +69,11 @@ class ControllerSpec extends WordSpec {
       controller.quitGame()
       controller.gameStatus should be(GameStatus.ExitGame)
       controller.getStatus() should be(controller.gameStatus)
+    }
+    
+    "get number of all players" in {
+      controller.setNumberAllPlayer(2)
+      controller.getNumberAllPlayer should be(controller.getNumberAllPlayer)
     }
 
     "get a Stack" in {
@@ -358,5 +367,39 @@ class ControllerSpec extends WordSpec {
     "do their phase" in {
 
     }
+  }
+  
+  "A player adding" should {
+    var controller = new Controller()
+    controller.createPlayer("Maxi")
+    controller.setPlayerNumber()
+    controller.getPlayer("Maxi").moved
+    controller.getPlayer().setPhaseLength(controller.getPlayer().getPhaseLength() + 1)
+    println(controller.getPlayerNumber())
+    controller.createPlayer("Jaromir")
+    controller.setPlayerNumber()
+    println(controller.getPlayerNumber())
+    println(controller.getPlayerList())
+    println(controller.getPlayerNumber())
+    val liste = new ListBuffer[ICard]
+    liste += NormalCard(Colors.Green, 6)
+    liste += NormalCard(Colors.Yellow, 6)
+    liste += NormalCard(Colors.Red, 6)
+    liste += NormalCard(Colors.Green, 7)
+    liste += NormalCard(Colors.Green, 7)
+    liste += NormalCard(Colors.Purple, 7)
+    controller.getPlayer("Maxi").hand = liste
+    controller.getPlayer("Jaromir").hand = liste
+    
+    "add card to list" in {
+      controller.addCardToList(1, 1, 1) should be(false)
+    }
+    
+    //"check add" in {
+      //var deck = controller.deck.createShuffleDeck
+      //var stack = controller.stack.createStack(controller.deck)
+      //val testPlayer = controller.createPlayer("Testplayer")
+      //controller.checkAdd(testPlayer.asInstanceOf[de.htwg.se.phase10.model.impl.Player])
+    //}
   }
 }
