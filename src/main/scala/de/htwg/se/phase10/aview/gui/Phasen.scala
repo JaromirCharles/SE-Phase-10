@@ -22,8 +22,8 @@ class Phasen(gui:createGameField,name:String,controller:IController) extends Fra
   listenTo(card)
 
   reactions += {
-    case ButtonClicked(`card`) if (!gui.willMove && !controller.getMove()) => gui.willMove = true;gui.move.updateMove; gui.move.top.visible_=(true)
-    case ButtonClicked(`card`) if(gui.willMove) =>
+    case ButtonClicked(`card`) if (!gui.willMove && !controller.getMove() && !gui.playerMenu) => gui.willMove = true;gui.move.updateMove; gui.move.top.visible_=(true)
+    case ButtonClicked(`card`) if(gui.willMove || gui.playerMenu) =>
     case ButtonClicked(`card`) => gui.infoFeld.turnPhase.text_=("You did this phase already!")
   }
 }

@@ -17,7 +17,11 @@ class MainField(controller:IController) {
 class createGameField(controller:IController) extends Frame with IObserver {
   controller.addObserver(this)
   controller.setPlayerNumber()
+  var playerIndex = 1
+  var playerMenu = false
   var willMove = false
+  var willAddRight = false
+  var willAddLeft = false
   var moveListFull = false
   val deckStack = new DeckStack(this,controller)
   val move = new MoveCards(this,controller)

@@ -107,27 +107,49 @@ class PlayerHand(gui:createGameField, controller:IController) extends Frame {
   listenTo(card1,card2,card3,card4,card5,card6,card7,card8,card9,card10,card11)
 
   reactions += {
-    case ButtonClicked(`card1`) if (controller.getPullCard() && card1.icon != null && !gui.willMove) => controller.dropCardStack(1);updateHand();
+    case ButtonClicked(`card1`) if (controller.getPullCard() && card1.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(1);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {} 
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card2`) if (controller.getPullCard() && card2.icon != null && !gui.willMove) => controller.dropCardStack(2);updateHand()
+    case ButtonClicked(`card2`) if (controller.getPullCard() && card2.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(2);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}   
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card3`) if (controller.getPullCard() && card3.icon != null && !gui.willMove) => controller.dropCardStack(3);updateHand()
+    case ButtonClicked(`card3`) if (controller.getPullCard() && card3.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(3);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}  
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card4`) if (controller.getPullCard() && card4.icon != null && !gui.willMove) => controller.dropCardStack(4);updateHand()
+    case ButtonClicked(`card4`) if (controller.getPullCard() && card4.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(4);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}   
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card5`) if (controller.getPullCard() && card5.icon != null && !gui.willMove) => controller.dropCardStack(5);updateHand()
+    case ButtonClicked(`card5`) if (controller.getPullCard() && card5.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(5);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}   
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card6`) if (controller.getPullCard() && card6.icon != null && !gui.willMove) => controller.dropCardStack(6);updateHand()
+    case ButtonClicked(`card6`) if (controller.getPullCard() && card6.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(6);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()){}    
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card7`) if (controller.getPullCard() && card7.icon != null && !gui.willMove) => controller.dropCardStack(7);updateHand()
+    case ButtonClicked(`card7`) if (controller.getPullCard() && card7.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(7);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()){}    
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card8`) if (controller.getPullCard() && card8.icon != null && !gui.willMove) => controller.dropCardStack(8);updateHand() 
+    case ButtonClicked(`card8`) if (controller.getPullCard() && card8.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(8);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}   
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card9`) if (controller.getPullCard() && card9.icon != null && !gui.willMove) => controller.dropCardStack(9);updateHand()
+    case ButtonClicked(`card9`) if (controller.getPullCard() && card9.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(9);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}  
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card10`) if (controller.getPullCard() && card10.icon != null && !gui.willMove) => controller.dropCardStack(10);updateHand()
+    case ButtonClicked(`card10`) if (controller.getPullCard() && card10.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(10);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {}   
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
-    case ButtonClicked(`card11`) if (controller.getPullCard() && card11.icon != null && !gui.willMove) => controller.dropCardStack(11);updateHand()
+    case ButtonClicked(`card11`) if (controller.getPullCard() && card11.icon != null && !gui.willMove && !gui.playerMenu) => controller.dropCardStack(11);updateHand();
+                                if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+                                else if (controller.getGameOver()) {} 
                                 controller.setPlayerNumber();controller.notifyObservers;updateHand()
 
     case ButtonClicked(`card1`) if (card1.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(1);updateHand();gui.move.updateMove;controller.notifyObservers
@@ -140,8 +162,54 @@ class PlayerHand(gui:createGameField, controller:IController) extends Frame {
     case ButtonClicked(`card8`) if (card8.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(8);updateHand();gui.move.updateMove;controller.notifyObservers
     case ButtonClicked(`card9`) if (card9.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(9);updateHand();gui.move.updateMove;controller.notifyObservers
     case ButtonClicked(`card10`) if (card10.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(10);updateHand();gui.move.updateMove;controller.notifyObservers 
-    case ButtonClicked(`card11`) if (card11.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(11);updateHand();gui.move.updateMove;controller.notifyObservers
-
+    case ButtonClicked(`card11`) if (card11.icon != null && gui.willMove && gui.move.checkMoveList) => controller.addToMoveList(11);updateHand();gui.move.updateMove;controller.notifyObservers   
+    
+    case ButtonClicked(`card1`) if (card1.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 1, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!")}
+    case ButtonClicked(`card2`) if (card2.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 2, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!")}
+    case ButtonClicked(`card3`) if (card3.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 3, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!")}
+    case ButtonClicked(`card4`) if (card4.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 4, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card5`) if (card5.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 5, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card6`) if (card6.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 6, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card7`) if (card7.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 7, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card8`) if (card8.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 8, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card9`) if (card9.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 9, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card10`) if (card10.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 10, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card11`) if (card11.icon != null && gui.willAddLeft) => if (controller.addCardToList(gui.playerIndex, 11, 1)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+      
+    case ButtonClicked(`card1`) if (card1.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 1, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card2`) if (card2.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 2, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card3`) if (card3.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 3, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card4`) if (card4.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 4, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card5`) if (card5.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 5, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card6`) if (card6.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 6, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card7`) if (card7.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 7, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card8`) if (card8.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 8, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card9`) if (card9.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 9, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card10`) if (card10.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 10, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    case ButtonClicked(`card11`) if (card11.icon != null && gui.willAddRight) => if (controller.addCardToList(gui.playerIndex, 11, 2)) {updateHand();gui.infoFeld.turnPhase.text_=("Card added!");gui.player.player.closeFrame()} 
+        else {gui.infoFeld.turnPhase.text_=("Not a correct card!");gui.player.player.closeFrame()}
+    
     case ButtonClicked(_) if (gui.willMove && !gui.move.checkMoveList) => gui.infoFeld.turnPhase.text_=("Move list is full!")
     case ButtonClicked(_) => gui.infoFeld.turnPhase.text_=("Not a correct move!")
   }

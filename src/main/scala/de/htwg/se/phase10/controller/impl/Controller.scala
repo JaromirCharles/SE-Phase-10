@@ -323,6 +323,7 @@ class Controller extends Observable with IController {
           return false
         } else {
           getPlayer.hand -= handCard
+          notifyObservers
           return true
         }
       } else if (player.name.equals(movePlayer) && indexWo == 2 && player.moved) {

@@ -5,6 +5,7 @@ import java.awt.Color
 import de.htwg.se.phase10.controller.IController
 
 class AllPlayer(gui:createGameField,controller:IController) extends Frame {
+  var player:Player = null
   val color = new Color(0x00592D)
   val player1Button = new Button {
     preferredSize_=(new Dimension(200,100)) 
@@ -14,9 +15,10 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
     font_=(this.font.deriveFont(16f))
     borderPainted_=(true)
     action = Action("") {
+      gui.playerIndex = 1
       for ((value,index) <- controller.getPlayerTurn().zipWithIndex) {
         index match {
-          case 0 => var player = new Player(gui,value,controller);player.top.visible_=(true)
+          case 0 if (!gui.willMove && !gui.playerMenu) => player = new Player(gui,value,controller);player.top.visible_=(true);gui.playerMenu = true
           case default =>
         }
       }
@@ -30,9 +32,10 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
     font_=(this.font.deriveFont(16f))
     borderPainted_=(true)
     action = Action("") {
+      gui.playerIndex = 2
       for ((value,index) <- controller.getPlayerTurn().zipWithIndex) {
         index match {
-          case 1 =>var player = new Player(gui,value,controller);player.top.visible_=(true)
+          case 1 if (!gui.willMove && !gui.playerMenu) =>player = new Player(gui,value,controller);player.top.visible_=(true);gui.playerMenu = true
           case default =>
         }
       }
@@ -46,9 +49,10 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
     font_=(this.font.deriveFont(16f))
     borderPainted_=(true)
     action = Action("") {
+      gui.playerIndex = 3
       for ((value,index) <- controller.getPlayerTurn().zipWithIndex) {
         index match {
-          case 2 =>var player = new Player(gui,value,controller);player.top.visible_=(true);
+          case 2 if (!gui.willMove && !gui.playerMenu) =>player = new Player(gui,value,controller);player.top.visible_=(true);gui.playerMenu = true
           case default =>
         }
       }
@@ -62,9 +66,10 @@ class AllPlayer(gui:createGameField,controller:IController) extends Frame {
     font_=(this.font.deriveFont(16f))
     borderPainted_=(true)
     action = Action("") {
+      gui.playerIndex = 4
       for ((value,index) <- controller.getPlayerTurn().zipWithIndex) {
         index match {
-          case 3 =>var player = new Player(gui,value,controller);player.top.visible_=(true)
+          case 3 if (!gui.willMove && !gui.playerMenu) =>player = new Player(gui,value,controller);player.top.visible_=(true);gui.playerMenu = true
           case default =>
         }
       }

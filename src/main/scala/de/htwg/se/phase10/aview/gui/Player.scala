@@ -6,7 +6,8 @@ import de.htwg.se.phase10.controller.IController
 
 class Player(gui:createGameField, playerName:String, controller:IController) extends SimpleSwingApplication {
   val color = new Color(0x00592D)
-  override def top = new MainFrame {
+  
+    val mainFrame = new MainFrame {
 
     val returnButton = new Button {
       background = color
@@ -14,6 +15,9 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
       font_=(this.font.deriveFont(16f))
       borderPainted = true
       action = Action("Return") {
+        gui.willAddLeft = false
+        gui.willAddRight = false
+        gui.playerMenu = false
         dispose()
         controller.notifyObservers
       }
@@ -27,20 +31,27 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
       action = Action("Stop player") {
         if (!controller.getPullCard()) {
           gui.infoFeld.turnPhase.text_=("Pull a card first!")
+          gui.playerMenu = false
           dispose()
         } else if (!controller.checkRemoveBreak()) {
           gui.infoFeld.turnPhase.text_=("You dont have a stop card!")
+          gui.playerMenu = false
           dispose()
         } else if (controller.getBreak(name)) {
           gui.infoFeld.turnPhase.text_=("Player is already stopped!")
+          gui.playerMenu = false
           dispose()
         } else {
+          if (controller.getRoundOver()) {gui.infoFeld.turnPhase.text_=("New Round begins ...");controller.startNewRound()}
+          else if (controller.getGameOver()) {}   
           controller.setBreak(playerName)
           gui.handCards.updateHand()
           gui.player.updateButtons()
           controller.setPlayerNumber()
           controller.notifyObservers
           gui.handCards.updateHand()
+          gui.playerMenu = false
+          gui.willMove = false
           dispose()
         }
       }
@@ -55,13 +66,17 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
       action = Action("Add a card") {
         if (!controller.getPullCard()) {
           gui.infoFeld.turnPhase.text_=("Pull a card first!")
+          gui.playerMenu = false
+          gui.willAddLeft = false
           dispose()
         } else if (!controller.getMove()) {
           gui.infoFeld.turnPhase.text_=("Do the phase first!")
+          gui.willAddLeft = false
+          gui.playerMenu = false
           dispose()
         }
         else {
-          
+          gui.willAddLeft = true
         }
       }
     }
@@ -75,10 +90,14 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
       action = Action("Add a card") {
         if (!controller.getPullCard()) {
           gui.infoFeld.turnPhase.text_=("Pull a card first!")
+          gui.willAddRight = false
           dispose()
         } else if (!controller.getMove()) {
           gui.infoFeld.turnPhase.text_=("Do the phase first!")
+          gui.willAddRight = false
           dispose()
+        } else {
+          gui.willAddRight = true
         }
       }
     }
@@ -110,5 +129,13 @@ class Player(gui:createGameField, playerName:String, controller:IController) ext
     title = "Player"
     preferredSize = new Dimension(2560,1040)
     resizable_= (false)
+  }
+  override def top = mainFrame
+  
+  def closeFrame() {
+    gui.willAddLeft = false
+    gui.willAddRight = false
+    gui.playerMenu = false
+    mainFrame.dispose()
   }
 }
