@@ -8,6 +8,9 @@ import de.htwg.se.phase10.controller.GameStatus
 import de.htwg.se.phase10.model.impl.Stack
 import scala.collection.mutable.ListBuffer
 import de.htwg.se.phase10.model.impl.Colors
+import de.htwg.se.phase10.model.impl.Deck
+import de.htwg.se.phase10.model.impl.Stack
+import de.htwg.se.phase10.model.impl.PlayerList
 import de.htwg.se.phase10.model.impl.NormalCard
 import de.htwg.se.phase10.model.impl.SpecialCard
 import de.htwg.se.phase10.model.impl.CardType
@@ -17,7 +20,10 @@ import de.htwg.se.phase10.model._
 class ControllerSpec extends WordSpec {
 
   "A new Controller" should {
-    var controller = new Controller
+    var deck:IDeck = new Deck
+    var stack:Stack = new Stack()
+    var playerList:IPlayerList = new PlayerList()
+    var controller = new Controller(deck, stack:IStack, playerList)
 
     "have a roundover" in {
       controller.roundOver should be(false)
@@ -77,17 +83,20 @@ class ControllerSpec extends WordSpec {
     }
 
     "get a Stack" in {
-      controller.getStack() should be(controller.stack.stack.head.toString())
+      controller.getStack() should be(controller.getStack())
     }
 
     "get a emptyStack" in {
-      controller.stack.stack = controller.stack.stack.drop(1)
+      controller.getCardStack()
       controller.getStack() should be("---- Empty ----")
     }
   }
 
   "A Stack " should {
-    var controller = new Controller
+var deck:IDeck = new Deck
+    var stack:Stack = new Stack()
+    var playerList:IPlayerList = new PlayerList()
+    var controller = new Controller(deck, stack:IStack, playerList)
     controller.deck.createShuffleDeck
     controller.stack.createStack(controller.deck)
 

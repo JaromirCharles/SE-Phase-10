@@ -1,9 +1,9 @@
 package de.htwg.se.phase10.controller.impl
 
-import de.htwg.se.phase10.model.impl.Deck
+import de.htwg.se.phase10.model.IDeck
 import de.htwg.se.phase10.model.impl.Card
-import de.htwg.se.phase10.model.impl.Stack
-import de.htwg.se.phase10.model.impl.Player
+import de.htwg.se.phase10.model.IStack
+import de.htwg.se.phase10.model.IPlayerList
 import de.htwg.se.phase10.model.impl._
 import de.htwg.se.phase10.controller.GameStatus
 import de.htwg.se.phase10.controller.ExitGame
@@ -16,7 +16,12 @@ import de.htwg.se.phase10.util.Observer.Observable
 import de.htwg.se.phase10.model.impl.Phase2
 import de.htwg.se.phase10.model.impl.helperMethods
 
-class Controller extends Observable with IController {
+import javax.inject.Inject
+import javax.inject.Singleton
+import de.htwg.se.phase10.model.IPlayerList
+
+@Singleton
+class Controller @Inject() (deck:IDeck, stack:IStack, playerList:IPlayerList) extends Observable with IController {
 
   private[impl] var roundOver = false
   private[impl] var gameOver = false
@@ -26,10 +31,6 @@ class Controller extends Observable with IController {
   private[impl] var countPlayer = 0
   private[impl] var playerMovedList = 0
   private[impl] var numberAllPlayer = 0
-
-  var playerList = new PlayerList()
-  var stack = new Stack()
-  var deck = new Deck()
 
   override def newGame(bool:Boolean) {
     newGameValue = bool 
@@ -73,7 +74,7 @@ class Controller extends Observable with IController {
   override def getStackCard() = stack.getTopCard  
 
   override def createPlayer(name:String)  {
-    playerList.playerList += new Player(name, deck, stack)
+    playerList.addPlayerList(new Player(name, deck, stack))
     countPlayer += 1
     gameStatus = GameStatus.AddPlayer
     notifyObservers(new AddPlayer())
@@ -83,7 +84,7 @@ class Controller extends Observable with IController {
 
   override def getPlayerTurn() : ListBuffer[String] = {
     var getPlayerList = new ListBuffer[String]()
-    for (x <- playerList.playerList) {
+    for (x <- playerList.getPlayerList) {
       getPlayerList += x.toString()
     }
     return getPlayerList
@@ -92,19 +93,19 @@ class Controller extends Observable with IController {
   override def getPlayerList() : String = {
     var returnString =""
     var index = 0
-    for (player <- playerList.playerList ) {
+    for (player <- playerList.getPlayerList) {
       index += 1
       returnString += "("+index+") " + player +("\n")
     }
     returnString
   }
 
-  override def givePlayerHandCards() = for (player <- playerList.playerList) player.createHand()
+  override def givePlayerHandCards() = for (player <- playerList.getPlayerList) player.createHand()
 
   override def getHand() : String = {
     var returnString = ""
     var index = 0
-    var player = playerList.playerList(this.playerNumber)
+    var player = playerList.getPlayerList(this.playerNumber)
     for (card <- player.hand) {
       index += 1
       returnString += "("+index+") " + card + "\n"
@@ -134,7 +135,7 @@ class Controller extends Observable with IController {
 
   override def getMoveList() : String = {
     var returnString = ""
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if(player.moved) {
         playerMovedList += 1
         returnString += player.name + ": " + player.moveList.mkString(" ,")+"\n"
@@ -153,7 +154,7 @@ class Controller extends Observable with IController {
   }
 
   override def addToMoveList(index:Int) {
-    var player = playerList.playerList(this.playerNumber)
+    var player = playerList.getPlayerList(this.playerNumber)
     var card = player.hand(index-1)
     player.hand -= card
     player.addCard(card)
@@ -200,14 +201,14 @@ class Controller extends Observable with IController {
   }
 
   override def getBreak(name:String) : Boolean = {
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(name) && player.checkBreak) return true
     }
     false
   }
 
   override def skipPlayer(name:String) {
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(name)) {
         player.setBreak
         setPlayerNumber()   
@@ -218,7 +219,7 @@ class Controller extends Observable with IController {
   override def stopPlayer(index:Int) = if (!getBreak(getPlayerTurn()(index-1))) setBreak(getPlayerTurn()(index-1))
 
   override def setBreak(name:String) {
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(name)) {
         player.setBreak
         getPlayer().pulledCard = false
@@ -254,7 +255,7 @@ class Controller extends Observable with IController {
   }
 
   override def setNextPhase() {
-     for (player <- playerList.playerList) {
+     for (player <- playerList.getPlayerList) {
        player.checkPhase match {
          case 1 => if (player.moved) {player.setPhase(); player.setState(Phase2); player.setPhaseLength(3)}
                    else player.setPhaseLength(3) 
@@ -287,11 +288,11 @@ class Controller extends Observable with IController {
 
   override def getGameOver() = gameOver
 
-  override def getPlayer() = playerList.playerList(playerNumber)
+  override def getPlayer() = playerList.getPlayerList(playerNumber)
 
   override def getPlayer(name:String) : Player = {
     var retPlayer:Player = null
-    for (player <- playerList.playerList)
+    for (player <- playerList.getPlayerList)
       if (player.name.equals(name))
         retPlayer = player
     return retPlayer
@@ -303,7 +304,7 @@ class Controller extends Observable with IController {
     givePlayerHandCards()
     roundOver = false
     playerMovedList = 0
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       player.moveList.clear()
       player.moved = false
     }
@@ -313,7 +314,7 @@ class Controller extends Observable with IController {
   override def addCardToList(indexSpieler:Int,indexCard:Int,indexWo:Int) : Boolean = {
     var handCard = getPlayer.hand(indexCard-1)
     var movePlayer = getPlayerTurn()(indexSpieler - 1)
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(movePlayer) && indexWo == 1 && player.moved) {
         player.moveList.insert(0, handCard)
         player.setPhaseLength(player.getPhaseLength() + 1);

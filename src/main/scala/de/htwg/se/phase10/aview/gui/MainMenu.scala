@@ -12,6 +12,7 @@ import de.htwg.se.phase10.controller.StartGame
 import de.htwg.se.phase10.controller.ExitGame
 import javafx.stage.Window
 import java.awt.Color
+import javax.inject.Inject
 
 class ImagePanelDemo(var controller:IController) extends SimpleSwingApplication  with IObserver {
 
@@ -113,7 +114,7 @@ class ImagePanel(rows0: Int, cols0: Int) extends GridPanel(rows0, cols0) {
   }
 }
 
-class MainMenu(var controller:IController) {
+class MainMenu @Inject() (var controller:IController) {
   val imagePanel = new ImagePanelDemo(controller)
   imagePanel.top.pack()
   imagePanel.top.visible_=(true)
