@@ -1,4 +1,5 @@
 package de.htwg.se.phase10.aview.tui
+
 import de.htwg.se.phase10.controller.AddPlayer
 import de.htwg.se.phase10.controller.ExitGame
 import de.htwg.se.phase10.controller.IController
@@ -7,18 +8,24 @@ import de.htwg.se.phase10.controller.StartGame
 import de.htwg.se.phase10.controller.UpdateStack
 import de.htwg.se.phase10.util.Observer.IObserver
 import de.htwg.se.phase10.util.Observer.Event
+import javax.inject.Inject
+import org.apache.log4j._
+import org.apache.spark._
 
-class Tui(var controller:IController) extends IObserver {
-  
+
+class Tui @Inject() (var controller:IController) extends IObserver {
+
   private var boolInput = true
   private var numberOfPlayer = 1
   private var numberPlayerCount = 0
   private var quit = false
+
+  val logger = Logger.getLogger(getClass().getName())
+  logger.debug("hier")
   
   controller.addObserver(this)
-  
   printMainMenu()
-  
+
   def inputString(input:String) : Boolean = {
     if (createPlayer(input)) {
       return true
@@ -27,20 +34,20 @@ class Tui(var controller:IController) extends IObserver {
       controller.newGame(true)
     } else if (input.equals("2") && controller.getStatus().equals(GameStatus.Welcome)) {
       printQuitMenu()
-      return false
+      sys.exit(0)
     } else {
       return checkInput(input)
     }
     return true
   }
-  
+
   def printMainMenu() {
     println("Welcome to Phase 10\n")
     println("Choose ...\n")
     println("(1) Start new Game")
     println("(2) Quit")
   }
-  
+
   def printNumberPlayer() = println("Choose a player number between 2 - 4 ...")
 
   def createPlayer(input:String) : Boolean = {
@@ -50,6 +57,7 @@ class Tui(var controller:IController) extends IObserver {
     if (controller.checkNewGame() && numberOfPlayer == 1) {
       try {
         numberOfPlayer = input.toInt
+        controller.setNumberAllPlayer(numberOfPlayer)
       } catch {
         case inputString : NumberFormatException => println("Only numbers between 2 - 4 are allowed!")
         printNumberPlayer()
@@ -84,11 +92,10 @@ class Tui(var controller:IController) extends IObserver {
     }
     return false
   }
-  
-  def printPlayer(name:String) = if (numberPlayerCount <= numberOfPlayer) println(controller.getStatus()+" - "+"name " +name)
-  
-  def printGameField(name:String) {
 
+  def printPlayer(name:String) = if (numberPlayerCount <= numberOfPlayer) println(controller.getStatus()+" - "+"name " +name)
+
+  def printGameField(name:String) {
     if (controller.getBreak(name)) {
       println(name + " you skip this turn!")
       controller.skipPlayer(name)
@@ -108,14 +115,14 @@ class Tui(var controller:IController) extends IObserver {
     println("(1) get card from deck\n(2) get card from stack\n(3+number of card) drop card stack and finish turn\n(4+number of player) stop player and finish turn")
     println("(5+number of card) add card to moveList\n(6) move phase\n(7+number of existing phase+card index+index where to put) put card to an existing phase\n(8) quit game ")
   }
-  
+
   def checkInput(input:String) : Boolean = {
     if (quit) return false
     var index = -1
     var inputMatch = input
     var indexPhase = -1
     var existingPhase = -1
-    
+
     if (input.length() > 1 && input.length < 4)  {
       inputMatch = input.substring(0,1)
       try {
@@ -156,7 +163,7 @@ class Tui(var controller:IController) extends IObserver {
       printGameField(controller.getName())
       return true
     }
-    
+
     inputMatch match {
       case "1" if (!controller.getPullCard()) => println("Your pulled card is: " + controller.getCardDeck()) 
       case "1" if (controller.getPullCard()) => printPullAlready()
@@ -191,15 +198,15 @@ class Tui(var controller:IController) extends IObserver {
     printGameField(controller.getName())
     return true
   }
-  
+
   def printPull() = println("Pull a card first!")
-  
+
   def printPullAlready() = println("You pulled a card already!")
-  
+
   def printQuitMenu() {
     println(controller.getStatus() + " exit game ...")
   }
-  
+
   override def update(e:Event) {
     if (e.isInstanceOf[ExitGame]) {
       quit = true
@@ -216,4 +223,3 @@ class Tui(var controller:IController) extends IObserver {
     }
   }
 }
-

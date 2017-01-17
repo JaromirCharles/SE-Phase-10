@@ -10,7 +10,7 @@ class GameInformation (controller:IController) extends Frame {
     contents += turnPhase
     background = color
   }
-  
+
   val turnPhase = new TextArea("Its your turn " + controller.getName() +"\nYour current Phase: " + controller.getPhaseNameNumber()._1) {
     foreground_=(Color.WHITE)
     font_=(this.font.deriveFont(16f))

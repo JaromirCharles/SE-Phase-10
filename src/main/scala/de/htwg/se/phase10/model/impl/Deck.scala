@@ -11,33 +11,31 @@ class Deck extends IDeck {
 
   private val jokerCards = (1 to 8).toList.map(cardindex => SpecialCard(CardType.Joker))
   private val breakCards = (1 to 4).toList.map(cardindex => SpecialCard(CardType.Break))
-  
+
   var cards:List[ICard] = Nil
-  
+
   override def createShuffleDeck {
     cards = scala.util.Random.shuffle(normalCards ::: jokerCards ::: breakCards)
     setIcons()
   }
-  
+
   override def setIcons() {
     for (card <- cards) {
       card.setIcon() 
     }
   }
-    
+
   override def getDeckSize = cards.length
-  
+
   override def dropDeck(number : Int) {
     this.cards = cards.drop(number)
   }
-  
+
   override def getDeck(number:Int) = cards.take(number)
 
-  
   override def createDeckFromStack(stack:IStack) {
     cards = stack.allExceptFirst()
     cards = scala.util.Random.shuffle(cards)
     stack.removeAllExceptFirst()
   }
 }
-

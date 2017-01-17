@@ -1,9 +1,9 @@
 package de.htwg.se.phase10.controller.impl
 
-import de.htwg.se.phase10.model.impl.Deck
+import de.htwg.se.phase10.model.IDeck
 import de.htwg.se.phase10.model.impl.Card
-import de.htwg.se.phase10.model.impl.Stack
-import de.htwg.se.phase10.model.impl.Player
+import de.htwg.se.phase10.model.IStack
+import de.htwg.se.phase10.model.IPlayerList
 import de.htwg.se.phase10.model.impl._
 import de.htwg.se.phase10.controller.GameStatus
 import de.htwg.se.phase10.controller.ExitGame
@@ -16,8 +16,13 @@ import de.htwg.se.phase10.util.Observer.Observable
 import de.htwg.se.phase10.model.impl.Phase2
 import de.htwg.se.phase10.model.impl.helperMethods
 
-class Controller extends Observable with IController {
-  
+import javax.inject.Inject
+import javax.inject.Singleton
+import de.htwg.se.phase10.model.IPlayerList
+
+@Singleton
+class Controller @Inject() (deck:IDeck, stack:IStack, playerList:IPlayerList) extends Observable with IController {
+
   private[impl] var roundOver = false
   private[impl] var gameOver = false
   private[impl] var gameStatus = GameStatus.Welcome 
@@ -25,11 +30,8 @@ class Controller extends Observable with IController {
   private[impl] var playerNumber = 0
   private[impl] var countPlayer = 0
   private[impl] var playerMovedList = 0
- 
-  var playerList = new PlayerList()
-  var stack = new Stack()
-  var deck = new Deck()
-  
+  private[impl] var numberAllPlayer = 0
+
   override def newGame(bool:Boolean) {
     newGameValue = bool 
     if (newGameValue) {
@@ -38,16 +40,20 @@ class Controller extends Observable with IController {
       gameStatus = GameStatus.NewGame
     }
   }
-  
+
   override def checkNewGame() = newGameValue
-  
+
   override def quitGame() {
     notifyObservers(new ExitGame())
     gameStatus = GameStatus.ExitGame
   }
-  
+
+  override def getNumberAllPlayer = numberAllPlayer
+
+  override def setNumberAllPlayer(number:Int) = numberAllPlayer = number
+
   override def getStatus() = gameStatus
-  
+
   override def createStackDeck() {
     deck.createShuffleDeck
     gameStatus = GameStatus.NewDeck
@@ -55,60 +61,60 @@ class Controller extends Observable with IController {
     gameStatus = GameStatus.NewStack
     notifyObservers(new UpdateStack())
   }
-  
+
   override def getStack() : String = {
     if (stack.stackSize == 0) {
       return "---- Empty ----"
     }
     stack.getTopCard.toString()
   }
-  
+
   override def getStackSize() = stack.stackSize
-  
+
   override def getStackCard() = stack.getTopCard  
-  
+
   override def createPlayer(name:String)  {
-    playerList.playerList += new Player(name, deck, stack)
+    playerList.addPlayerList(new Player(name, deck, stack))
     countPlayer += 1
     gameStatus = GameStatus.AddPlayer
     notifyObservers(new AddPlayer())
   }
-  
+
   override def getName() = getPlayer().name
-  
+
   override def getPlayerTurn() : ListBuffer[String] = {
     var getPlayerList = new ListBuffer[String]()
-    for (x <- playerList.playerList) {
+    for (x <- playerList.getPlayerList) {
       getPlayerList += x.toString()
     }
     return getPlayerList
   }
-  
+
   override def getPlayerList() : String = {
     var returnString =""
     var index = 0
-    for (player <- playerList.playerList ) {
+    for (player <- playerList.getPlayerList) {
       index += 1
       returnString += "("+index+") " + player +("\n")
     }
     returnString
   }
-  
-  override def givePlayerHandCards() = for (player <- playerList.playerList) player.createHand()
-  
+
+  override def givePlayerHandCards() = for (player <- playerList.getPlayerList) player.createHand()
+
   override def getHand() : String = {
     var returnString = ""
     var index = 0
-    var player = playerList.playerList(this.playerNumber)
+    var player = playerList.getPlayerList(this.playerNumber)
     for (card <- player.hand) {
       index += 1
       returnString += "("+index+") " + card + "\n"
     }
     returnString
   }
-  
+
   override def getHandSize() = getPlayer.handSize
-  
+
   override def getPhaseNameNumber() : (String,Int) = {
     var returnTuple = ("",0)
     var player = getPlayer()
@@ -126,10 +132,10 @@ class Controller extends Observable with IController {
     }
     return returnTuple
   }
-  
+
   override def getMoveList() : String = {
     var returnString = ""
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if(player.moved) {
         playerMovedList += 1
         returnString += player.name + ": " + player.moveList.mkString(" ,")+"\n"
@@ -140,31 +146,31 @@ class Controller extends Observable with IController {
     }
     returnString
   }
-  
+
   override def getPlayerMoveList() : String = {
     var returnString = ""
     for(card <- getPlayer().moveList) returnString += " | " + card 
     returnString
   }
-  
+
   override def addToMoveList(index:Int) {
-    var player = playerList.playerList(this.playerNumber)
+    var player = playerList.getPlayerList(this.playerNumber)
     var card = player.hand(index-1)
     player.hand -= card
     player.addCard(card)
   }
-  
+
   override def movePhase() = getPlayer().move
-    
+
   override def getMove() = getPlayer().moved
 
   override def updateHand() {
     getPlayer().hand ++= getPlayer().moveList 
     getPlayer().moveList.clear()
   }
-  
+
   override def getPullCard() = getPlayer.pulledCard; notifyObservers
-  
+
   override def getCardDeck() : String = {
     if (deck.getDeckSize == 0) 
       deck.createDeckFromStack(stack)
@@ -172,7 +178,7 @@ class Controller extends Observable with IController {
     notifyObservers
     returnCard
   }
-  
+
   override def getCardStack() : String = {
     var returnCard = ""
     if (stack.stackSize == 0) 
@@ -184,7 +190,7 @@ class Controller extends Observable with IController {
     }
     returnCard
   }
-  
+
   override def dropCardStack(index:Int) : String = {
     var dropCard = getPlayer.dropToStack(getPlayer().hand(index-1)).toString()
     notifyObservers(new UpdateStack())
@@ -193,34 +199,34 @@ class Controller extends Observable with IController {
     notifyObservers
     return dropCard
   }
-  
+
   override def getBreak(name:String) : Boolean = {
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(name) && player.checkBreak) return true
     }
     false
   }
-  
+
   override def skipPlayer(name:String) {
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(name)) {
         player.setBreak
         setPlayerNumber()   
       }
     }
   }
-  
+
   override def stopPlayer(index:Int) = if (!getBreak(getPlayerTurn()(index-1))) setBreak(getPlayerTurn()(index-1))
-  
+
   override def setBreak(name:String) {
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(name)) {
         player.setBreak
         getPlayer().pulledCard = false
       }
     }
   }
-  
+
   override def checkRemoveBreak() : Boolean = {
     var player = getPlayer()
     for (card <- player.hand) {
@@ -231,7 +237,7 @@ class Controller extends Observable with IController {
     }
     return false
   }
-  
+
   override def finishedRound() : Boolean = {
     if(getPlayer().handSize == 0 && getPlayer().checkPhase != 10) {
       gameStatus = GameStatus.RoundOver
@@ -239,7 +245,7 @@ class Controller extends Observable with IController {
     }
     false 
   }
-  
+
   override def finishedGame() : Boolean = {
     if (getPlayer().handSize == 0 && getPlayer().checkPhase == 10) {
       gameStatus = GameStatus.GameOver
@@ -247,9 +253,9 @@ class Controller extends Observable with IController {
     }
     false
   }
-  
+
   override def setNextPhase() {
-     for (player <- playerList.playerList) {
+     for (player <- playerList.getPlayerList) {
        player.checkPhase match {
          case 1 => if (player.moved) {player.setPhase(); player.setState(Phase2); player.setPhaseLength(3)}
                    else player.setPhaseLength(3) 
@@ -273,32 +279,32 @@ class Controller extends Observable with IController {
        }
      }
   }
-  
+
   override def setPlayerNumber() = if (playerNumber < countPlayer - 1) playerNumber += 1 else playerNumber = 0
-  
+
   override def getPlayerNumber() = this.playerNumber
-  
+
   override def getRoundOver() = roundOver
-  
+
   override def getGameOver() = gameOver
-  
-  override def getPlayer() = playerList.playerList(playerNumber)
-  
+
+  override def getPlayer() = playerList.getPlayerList(playerNumber)
+
   override def getPlayer(name:String) : Player = {
     var retPlayer:Player = null
-    for (player <- playerList.playerList)
+    for (player <- playerList.getPlayerList)
       if (player.name.equals(name))
         retPlayer = player
     return retPlayer
   }
-  
+
   override def startNewRound() {
     setNextPhase()
     createStackDeck()
     givePlayerHandCards()
     roundOver = false
     playerMovedList = 0
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       player.moveList.clear()
       player.moved = false
     }
@@ -308,7 +314,7 @@ class Controller extends Observable with IController {
   override def addCardToList(indexSpieler:Int,indexCard:Int,indexWo:Int) : Boolean = {
     var handCard = getPlayer.hand(indexCard-1)
     var movePlayer = getPlayerTurn()(indexSpieler - 1)
-    for (player <- playerList.playerList) {
+    for (player <- playerList.getPlayerList) {
       if (player.name.equals(movePlayer) && indexWo == 1 && player.moved) {
         player.moveList.insert(0, handCard)
         player.setPhaseLength(player.getPhaseLength() + 1);
@@ -318,6 +324,7 @@ class Controller extends Observable with IController {
           return false
         } else {
           getPlayer.hand -= handCard
+          notifyObservers
           return true
         }
       } else if (player.name.equals(movePlayer) && indexWo == 2 && player.moved) {
@@ -340,7 +347,7 @@ class Controller extends Observable with IController {
     }
     return false
   }
-  
+
   override def checkAdd(player:Player) : Boolean = {
     var length = player.getPhaseLength()
     player.checkPhase match {
