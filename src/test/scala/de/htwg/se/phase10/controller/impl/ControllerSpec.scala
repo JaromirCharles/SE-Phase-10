@@ -9,12 +9,14 @@ import de.htwg.se.phase10.model.impl.Stack
 import scala.collection.mutable.ListBuffer
 import de.htwg.se.phase10.model.impl.Colors
 import de.htwg.se.phase10.model.impl.Deck
+import de.htwg.se.phase10.model.impl.Player
 import de.htwg.se.phase10.model.impl.Stack
 import de.htwg.se.phase10.model.impl.PlayerList
 import de.htwg.se.phase10.model.impl.NormalCard
 import de.htwg.se.phase10.model.impl.SpecialCard
 import de.htwg.se.phase10.model.impl.CardType
 import de.htwg.se.phase10.model._
+import de.htwg.se.phase10.model.impl.PlayerList
 
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec {
@@ -393,15 +395,7 @@ class ControllerSpec extends WordSpec {
     var playerList:IPlayerList = new PlayerList()
     var controller = new Controller(deck, stack:IStack, playerList)
     controller.createPlayer("Maxi")
-    controller.setPlayerNumber()
-    controller.getPlayer("Maxi").moved
-    controller.getPlayer().setPhaseLength(controller.getPlayer().getPhaseLength() + 1)
-    println(controller.getPlayerNumber())
     controller.createPlayer("Jaromir")
-    controller.setPlayerNumber()
-    println(controller.getPlayerNumber())
-    println(controller.getPlayerList())
-    println(controller.getPlayerNumber())
     val liste = new ListBuffer[ICard]
     liste += NormalCard(Colors.Green, 6)
     liste += NormalCard(Colors.Yellow, 6)
@@ -409,18 +403,52 @@ class ControllerSpec extends WordSpec {
     liste += NormalCard(Colors.Green, 7)
     liste += NormalCard(Colors.Green, 7)
     liste += NormalCard(Colors.Purple, 7)
-    controller.getPlayer("Maxi").hand = liste
-    controller.getPlayer("Jaromir").hand = liste
+    liste += NormalCard(Colors.Purple, 7)
     
+    controller.getPlayer().hand = liste.drop(6)
+    controller.getPlayer().moveList = liste.take(6)
+    controller.movePhase()
     "add card to list" in {
-      controller.addCardToList(1, 1, 1) should be(false)
+      controller.addCardToList(1, 1, 2) should be(true)
+      controller.getPlayer().hand = liste.take(1)
+      controller.addCardToList(1, 1, 1) should be(true)
     }
     
-    //"check add" in {
-      //var deck = controller.deck.createShuffleDeck
-      //var stack = controller.stack.createStack(controller.deck)
-      //val testPlayer = controller.createPlayer("Testplayer")
-      //controller.checkAdd(testPlayer.asInstanceOf[de.htwg.se.phase10.model.impl.Player])
-    //}
+    "do not add a card to list" in {
+      liste.clear()
+      liste += NormalCard(Colors.Green, 10)
+      controller.getPlayer().hand = liste
+      controller.addCardToList(1, 1, 1) should be(false)
+      controller.addCardToList(1, 1, 2) should be(false)
+    }
+    
+    "some other player cant add cards if they not out" in {
+      controller.setPlayerNumber()
+      liste += NormalCard(Colors.Green, 6)
+      liste += NormalCard(Colors.Yellow, 6)
+      liste += NormalCard(Colors.Red, 6)
+      liste += NormalCard(Colors.Green, 7)
+      liste += NormalCard(Colors.Green, 7)
+      liste += NormalCard(Colors.Purple, 7)
+      liste += NormalCard(Colors.Purple, 7)
+      controller.getPlayer().hand = liste
+      
+      controller.addCardToList(1, 1, 1) should be(false)
+      controller.addCardToList(1, 1, 2) should be(false)
+    }
+    
+    "if playerlist is zero you cant add to list" in {
+      var deck2:IDeck = new Deck
+      var stack2:Stack = new Stack()
+      var playerList2:PlayerList = new PlayerList
+      var controller2 = new Controller(deck2,stack2,playerList2)
+      controller.addCardToList(1, 1, 1) should be(false)
+    }
+//    "check add" in {
+//      var varDeck =  deck.createShuffleDeck
+//      var varStack = stack.createStack(deck)
+//      val testPlayer = new Player("Jaromir",deck, stack)
+//      controller.checkAdd(testPlayer.asInstanceOf[de.htwg.se.phase10.model.impl.Player])
+//    }
   }
 }
