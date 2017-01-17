@@ -126,6 +126,11 @@ class PhasenSpec extends WordSpec {
       helper.checkColor(cardList, 4) should be(false)
     }
     
+     "should also be again false " in {
+      var cardList = List(NormalCard(Colors.Purple, 10),NormalCard(Colors.Yellow, 1),NormalCard(Colors.Purple, 11),NormalCard(Colors.Green, 10))
+      helper.checkColor(cardList, 4) should be(false)
+    }
+    
     "should with joker be false" in {
       var cardList = List(NormalCard(Colors.Green, 10),SpecialCard(CardType.Joker),NormalCard(Colors.Purple, 11),NormalCard(Colors.Green, 10))
       helper.checkColor(cardList, 4) should be(false)
@@ -138,6 +143,11 @@ class PhasenSpec extends WordSpec {
     
     "should be false with joker color" in {
       var cardList = List(SpecialCard(CardType.Joker),NormalCard(Colors.Red, 1),NormalCard(Colors.Red, 2),SpecialCard(CardType.Joker),NormalCard(Colors.Green, 1))
+        helper.checkColor(cardList, 5) should be(false)
+    }
+    
+    "should be false with break color" in {
+      var cardList = List(SpecialCard(CardType.Joker),NormalCard(Colors.Red, 1),NormalCard(Colors.Red, 2),SpecialCard(CardType.Break),NormalCard(Colors.Green, 1))
         helper.checkColor(cardList, 5) should be(false)
     }
   }

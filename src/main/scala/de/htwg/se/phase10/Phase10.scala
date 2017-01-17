@@ -27,7 +27,7 @@ object Phase10 {
   }
 
   def main(args: Array[String]): Unit = {
-
+  
     val injector = Guice.createInjector(new Phase10Module)
     
     val tui:Tui = injector.instance[Tui]

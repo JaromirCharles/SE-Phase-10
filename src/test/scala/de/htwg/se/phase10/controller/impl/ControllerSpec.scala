@@ -21,7 +21,7 @@ class ControllerSpec extends WordSpec {
 
   "A new Controller" should {
     var deck:IDeck = new Deck
-    var stack:Stack = new Stack()
+    var stack:Stack = new Stack() 
     var playerList:IPlayerList = new PlayerList()
     var controller = new Controller(deck, stack:IStack, playerList)
 
@@ -87,31 +87,34 @@ class ControllerSpec extends WordSpec {
     }
 
     "get a emptyStack" in {
-      controller.getCardStack()
+      stack.stack = stack.stack.drop(stack.stackSize)
       controller.getStack() should be("---- Empty ----")
     }
   }
 
   "A Stack " should {
-var deck:IDeck = new Deck
+    var deck:IDeck = new Deck
     var stack:Stack = new Stack()
     var playerList:IPlayerList = new PlayerList()
     var controller = new Controller(deck, stack:IStack, playerList)
-    controller.deck.createShuffleDeck
-    controller.stack.createStack(controller.deck)
+    deck.createShuffleDeck
+    stack.createStack(deck)
 
     "have a size" in {
-      controller.getStackSize() should be(controller.stack.stackSize)
+      controller.getStackSize() should be(stack.stack.size)
     }
 
     "have a top card" in {
-      val firstcard = controller.stack.stack.head
+      val firstcard = stack.stack.head
       controller.getStackCard() should be(firstcard)
     }
   }
 
   "A player" should {
-    var controller = new Controller
+    var deck:IDeck = new Deck
+    var stack:Stack = new Stack()
+    var playerList:IPlayerList = new PlayerList()
+    var controller = new Controller(deck, stack:IStack, playerList)
     controller.createPlayer("Jaromir")
     controller.setPlayerNumber()
 
@@ -129,10 +132,10 @@ var deck:IDeck = new Deck
     }
 
     "have hand cards" in {
-      controller.deck.createShuffleDeck
-      controller.stack.createStack(controller.deck)
+      deck.createShuffleDeck
+      stack.createStack(deck)
       controller.givePlayerHandCards()
-      for (player <- controller.playerList.playerList) {
+      for (player <- playerList.getPlayerList) {
         player.hand.size should be(10)
       } 
     }
@@ -231,25 +234,25 @@ var deck:IDeck = new Deck
     }
 
     "take a card from deck" in {
-      var firstcard = controller.deck.cards.head
+      var firstcard = deck.getDeck(1).head
       controller.getCardDeck() should be(firstcard.toString())
       controller.getPullCard() should be(true)
     }
 
     "take a card from recreateddeck" in {
-      controller.stack.stack = controller.deck.cards
-      controller.deck.cards = Nil
+      stack.stack = deck.getDeck(deck.getDeckSize)
+      deck.dropDeck(deck.getDeckSize)
       controller.getCardDeck()
     }
 
     "take a card from stack" in {
-      var firstcard = controller.stack.stack.head
+      var firstcard = stack.stack.head
       controller.getCardStack() should be(firstcard.toString())
     }
 
     "take a card from empty stack" in {
-      controller.stack.stack = Nil
-      var firstcard = controller.deck.cards.head
+      stack.stack = Nil
+      var firstcard = deck.getDeck(1).head
       controller.getCardStack() should be(firstcard.toString())
     }
 
@@ -320,7 +323,10 @@ var deck:IDeck = new Deck
   }
 
   "A game" should {
-    var controller = new Controller()
+    var deck:IDeck = new Deck
+    var stack:Stack = new Stack()
+    var playerList:IPlayerList = new PlayerList()
+    var controller = new Controller(deck, stack:IStack, playerList)
     controller.createPlayer("Nico")
     controller.createPlayer("Artur")
 
@@ -350,12 +356,15 @@ var deck:IDeck = new Deck
   }
 
   "Some player" should {
-    var controller = new Controller()
+    var deck:IDeck = new Deck
+    var stack:Stack = new Stack()
+    var playerList:IPlayerList = new PlayerList()
+    var controller = new Controller(deck, stack:IStack, playerList)
     controller.createPlayer("Maxi")
     controller.createPlayer("Jaromir")
     controller.createPlayer("Artur")
-    controller.deck.createShuffleDeck
-    controller.stack.createStack(controller.deck)
+    deck.createShuffleDeck
+    stack.createStack(deck)
 
     val liste = new ListBuffer[ICard]
     liste += NormalCard(Colors.Green, 6)
@@ -379,7 +388,10 @@ var deck:IDeck = new Deck
   }
   
   "A player adding" should {
-    var controller = new Controller()
+    var deck:IDeck = new Deck
+    var stack:Stack = new Stack()
+    var playerList:IPlayerList = new PlayerList()
+    var controller = new Controller(deck, stack:IStack, playerList)
     controller.createPlayer("Maxi")
     controller.setPlayerNumber()
     controller.getPlayer("Maxi").moved
