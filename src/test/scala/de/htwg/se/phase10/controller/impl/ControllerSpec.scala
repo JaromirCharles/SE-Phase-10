@@ -452,39 +452,7 @@ class ControllerSpec extends WordSpec {
 //    }
   }
 }
-                                                                                       
-                                                                                          
-                                                                                      
-                                                                                      
-                                                                                    
-                                                                                      
-                                                                                      
-                                                                                      
-                                                                                      
-                                                                                      
-                                                                                        
-                                                                                      
-                                                                                    
-                                                                                      
-                                                                                        
-                                                                                
-                                                                                    
-                                                                                  
-                                                                                    
-                                                                                    
-                                                                                      
-                                                                                      
-                                                                                      
-                                                                                        
-                                                                                  
-                                                                                      
-                                                                                      
-                                                                                    
-                                                                                        
-                                                                                      
-                                                                                    
-                                                                                    
-                                                                                      
+                                                       
                                                                                       
                                                                                   
                                                                                       
