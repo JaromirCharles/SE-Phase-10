@@ -10,7 +10,6 @@ import de.htwg.se.phase10.util.Observer.IObserver
 import de.htwg.se.phase10.util.Observer.Event
 import javax.inject.Inject
 import org.apache.log4j._
-import org.apache.spark._
 
 
 class Tui @Inject() (var controller:IController) extends IObserver {
