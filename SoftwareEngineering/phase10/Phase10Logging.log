@@ -1,0 +1,47 @@
+18-01-2017 12:57:28 INFO  Tui:43 - Welcome to Phase 10
+
+18-01-2017 12:57:28 INFO  Tui:44 - Choose ...
+
+18-01-2017 12:57:28 INFO  Tui:45 - (1) Start new Game
+18-01-2017 12:57:28 INFO  Tui:46 - (2) Quit
+18-01-2017 12:57:31 INFO  Tui:224 - Card from deck to stack...
+18-01-2017 12:57:31 INFO  Tui:49 - Choose a player number between 2 - 4 ...
+18-01-2017 12:57:32 INFO  Tui:94 - AddPlayer - name a
+18-01-2017 12:57:32 INFO  Tui:94 - AddPlayer - name s
+18-01-2017 12:57:33 INFO  Tui:94 - AddPlayer - name d
+18-01-2017 12:57:33 INFO  Tui:102 - -----------------------------------------------
+18-01-2017 12:57:33 INFO  Tui:103 - It's your turn a
+
+18-01-2017 12:57:33 INFO  Tui:104 - Your current Phase: 2 Drillinge
+18-01-2017 12:57:33 INFO  Tui:105 - All players ...
+18-01-2017 12:57:33 INFO  Tui:106 - (1) a
+(2) s
+(3) d
+
+18-01-2017 12:57:33 INFO  Tui:107 - People which did this Phase already ... 
+18-01-2017 12:57:33 INFO  Tui:108 - ----- Nobody did this phase ----
+18-01-2017 12:57:33 INFO  Tui:109 - Your move list: 
+18-01-2017 12:57:33 INFO  Tui:110 - First card of the Stack: Red 3
+18-01-2017 12:57:33 INFO  Tui:111 - Your hand cards...
+(1) Blau Break
+(2) Yellow 5
+(3) Red 4
+(4) Red 5
+(5) Yellow 2
+(6) Blau Break
+(7) Yellow 9
+(8) Yellow 1
+(9) Red 2
+(10) Red 12
+
+
+18-01-2017 12:57:33 INFO  Tui:112 - Choose...
+18-01-2017 12:57:33 INFO  Tui:113 - (1) get card from deck
+18-01-2017 12:57:33 INFO  Tui:114 - (2) get card from stack
+18-01-2017 12:57:33 INFO  Tui:115 - (3+number of card) drop card stack and finish turn
+18-01-2017 12:57:33 INFO  Tui:116 - (4+number of player) stop player and finish turn
+18-01-2017 12:57:33 INFO  Tui:117 - (5+number of card) add card to moveList
+18-01-2017 12:57:33 INFO  Tui:118 - (6) move phase
+18-01-2017 12:57:33 INFO  Tui:119 - (7+number of existing phase+card index+index where to put) put card to an existing phase
+18-01-2017 12:57:33 INFO  Tui:120 - (8) quit game
+18-01-2017 12:57:36 INFO  Tui:211 - AddPlayer exit game ...

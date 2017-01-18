@@ -5,18 +5,10 @@ import org.scalatest.Matchers._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import de.htwg.se.phase10.controller.GameStatus
-import de.htwg.se.phase10.model.impl.Stack
 import scala.collection.mutable.ListBuffer
-import de.htwg.se.phase10.model.impl.Colors
-import de.htwg.se.phase10.model.impl.Deck
-import de.htwg.se.phase10.model.impl.Player
-import de.htwg.se.phase10.model.impl.Stack
-import de.htwg.se.phase10.model.impl.PlayerList
-import de.htwg.se.phase10.model.impl.NormalCard
-import de.htwg.se.phase10.model.impl.SpecialCard
-import de.htwg.se.phase10.model.impl.CardType
 import de.htwg.se.phase10.model._
-import de.htwg.se.phase10.model.impl.PlayerList
+import de.htwg.se.phase10.model.impl._
+
 
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec {
@@ -444,12 +436,91 @@ class ControllerSpec extends WordSpec {
       var controller2 = new Controller(deck2,stack2,playerList2)
       controller.addCardToList(1, 1, 1) should be(false)
     }
-//    "check add" in {
-//      var varDeck =  deck.createShuffleDeck
-//      var varStack = stack.createStack(deck)
-//      val testPlayer = new Player("Jaromir",deck, stack)
-//      controller.checkAdd(testPlayer.asInstanceOf[de.htwg.se.phase10.model.impl.Player])
-//    }
+    
+    "add a card to a row" in {
+      controller.createPlayer("Artur")
+      controller.setPlayerNumber()
+      controller.getPlayer().moved = true
+      controller.setNextPhase()
+      controller.getPlayer().moved = false
+      liste.clear()
+      liste += NormalCard(Colors.Green, 6)
+      liste += NormalCard(Colors.Yellow, 6)
+      liste += NormalCard(Colors.Red, 6)
+      liste += NormalCard(Colors.Red, 6)
+      liste += NormalCard(Colors.Green, 7)
+      liste += NormalCard(Colors.Red, 8)
+      liste += NormalCard(Colors.Green, 9) 
+      controller.getPlayer().moveList = liste
+      controller.movePhase() 
+      controller.getMove() should be(true)
+      val liste2 = new ListBuffer[ICard]
+      liste2 += NormalCard(Colors.Green, 5)
+      liste2 += NormalCard(Colors.Green, 10)
+      liste2 += NormalCard(Colors.Green, 1)
+      controller.getPlayer().hand = liste2
+      controller.addCardToList(3, 1, 2) should be(true)
+      controller.addCardToList(3, 1, 2) should be(true)
+      controller.addCardToList(3, 1, 2) should be(false)
+      controller.getPlayer().moved = false
+      controller.addCardToList(3, 1, 2) should be(false)
+    } 
+    "add a card to phase4" in {
+      controller.getPlayer().checkPhase = 4
+      controller.getPlayer().phase = Phase4
+      controller.getPlayer().hand.clear()
+      controller.getPlayer().moved = false
+      controller.getPlayer().moveList.clear()
+      liste.clear()
+      liste += NormalCard(Colors.Green, 3)
+      liste += NormalCard(Colors.Yellow, 4)
+      liste += NormalCard(Colors.Red, 5)
+      liste += NormalCard(Colors.Red, 6)
+      liste += NormalCard(Colors.Green, 7)
+      liste += NormalCard(Colors.Red, 8)
+      liste += NormalCard(Colors.Green, 9) 
+      controller.getPlayer().moveList = liste
+      controller.movePhase()
+      controller.getPlayer().moved should be(true)
+      val liste2 = new ListBuffer[ICard]
+      liste2 += NormalCard(Colors.Green, 2)
+      liste2 += NormalCard(Colors.Green, 10)
+      liste2 += NormalCard(Colors.Green, 3)
+      controller.getPlayer().hand = liste2
+      controller.addCardToList(3, 1, 1) should be(true)
+      controller.addCardToList(3, 1, 2) should be(true)
+      controller.addCardToList(3, 1, 2) should be(false)
+      controller.getPlayer().moved = false
+      controller.addCardToList(3, 1, 2) should be(false)
+    }
+    "add a card to phase8" in {
+      controller.getPlayer().checkPhase = 8
+      controller.getPlayer().phase = Phase8
+      controller.getPlayer().hand.clear()
+      controller.getPlayer().moved = false
+      controller.getPlayer().moveList.clear()
+      liste.clear()
+      liste += NormalCard(Colors.Green, 3)
+      liste += NormalCard(Colors.Green, 4)
+      liste += NormalCard(Colors.Green, 5)
+      liste += NormalCard(Colors.Green, 6)
+      liste += NormalCard(Colors.Green, 7)
+      liste += NormalCard(Colors.Green, 8)
+      liste += NormalCard(Colors.Green, 9) 
+      controller.getPlayer().moveList = liste
+      controller.movePhase()
+      controller.getPlayer().moved should be(true)
+      val liste2 = new ListBuffer[ICard]
+      liste2 += NormalCard(Colors.Green, 2)
+      liste2 += NormalCard(Colors.Green, 10)
+      liste2 += NormalCard(Colors.Red, 3)
+      controller.getPlayer().hand = liste2
+      controller.addCardToList(3, 1, 1) should be(true)
+      controller.addCardToList(3, 1, 2) should be(true)
+      controller.addCardToList(3, 1, 2) should be(false)
+      controller.getPlayer().moved = false
+      controller.addCardToList(3, 1, 2) should be(false)
+    }
   }
 }
                                                        

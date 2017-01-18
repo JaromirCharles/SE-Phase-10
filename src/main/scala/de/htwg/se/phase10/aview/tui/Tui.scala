@@ -34,7 +34,7 @@ class Tui @Inject() (var controller:IController) extends IObserver {
       printQuitMenu()
       sys.exit(0)
     } else {
-      return checkInput(input)
+      return checkInput(input) 
     }
     return true
   }

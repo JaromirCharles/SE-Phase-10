@@ -319,7 +319,7 @@ class Controller @Inject() (deck:IDeck, stack:IStack, playerList:IPlayerList) ex
         player.moveList.insert(0, handCard)
         player.setPhaseLength(player.getPhaseLength() + 1);
         if (!checkAdd(player)) {
-          player.moveList.remove(0)
+          player.moveList.remove(0) 
           player.setPhaseLength(player.getPhaseLength() - 1);
           return false
         } else {
