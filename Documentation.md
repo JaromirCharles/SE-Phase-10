@@ -2,7 +2,7 @@ Documentation
 =========================
 
 ## Purpose of the project
-* This project is used to learn the basic concepts of Software Engineering. It gives an insight on:
+* The aim of the project is to learn the basic concepts of Software Engineering. It gives an insight and understanding on:
 	* Version control
 	* Test Driven Deployment
 	* Design patterns
@@ -24,13 +24,13 @@ The authors and anyone interested in playing a desktop version of the game **Pha
 
 ###### How to install/Setup
 * Add project to your Eclipse workspace
-* run *sbt eclipse* in bash which will create the necessary Eclipse project files in order for the program to run
+* run **sbt eclipse** in bash which will create the necessary Eclipse project files in order for the program to run
 
 ###### How to run
-* Run the scala class *phase10.scala* to execute
+* Run the scala class **phase10.scala** to execute
 
 ###### Introduction on how to play
-* Hit *Start New Game* and create players (2-4)
+* Hit **Start New Game** and create players (2-4)
 * Each player receives 10 cards to start with
 * Player must then either take a card from the deck or from the stack
 * He can then try to move a phase by completing the requirements (if he holds the necessary cards) or block a player
