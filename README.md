@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 htwg-scala-seed
 =========================
 
@@ -14,4 +13,20 @@ class Software Engineering at the University of Applied Science HTWG Konstanz
 Implementation of the game 'Phase-10' in scala
 
 Setting up GitHub
->>>>>>> branch 'master' of https://github.com/JaromirCharles/SE-Phase-10.git
+>>>>>>> branch 'master' of https://github.com/JaromirCharles/SE-Phase-10.git 
+
+## Setup
+* Clone the project from GitHub
+* Add project to your workspace
+* run *sbt eclipse* in bash which will create the necessary Eclipse project files in order for the program to run
+* run *phase10.scala* to start playing
+
+## Introduction on how to play
+* Hit *Start New Game* and create players (2-4)
+* Each player receives 10 cards to start with
+* Player must then either take a card from the deck or from the stack
+* He can then try to move a phase by completing the requirements (if he holds the necessary cards) or block a player
+* Player ends his turn by laying a card onto the stack
+
+## Goal of the game
+* First player to finish all 10 Phases has won!
