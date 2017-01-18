@@ -40,7 +40,9 @@ The authors and anyone interested in playing a desktop version of the game **Pha
 * First player to finish all 10 Phases has won!
 
 ## Project development over time
-* The project was written in scala in the Eclipse IDE for scala
+* The project was written in the programming language *scala* in the Eclipse IDE for scala
+* scrumwise (web based tool) was used to set Sprints *(tasks we would like to accomplish in x amount of hours)* and to
+also keep track of project development via Burndown charts. 
 * The MVC architecture was used to implement the project:
 	* Model layer was implemented to provide the ground work of the project and to maintain data
 	* Controller layer controlls the actions between the model and the view
