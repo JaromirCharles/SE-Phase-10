@@ -7,3 +7,4 @@ trait Phase {
   //Checks if list has enough elements 
   def checkPhaseSize(cards:List[ICard]) : Boolean
 }
+

@@ -107,7 +107,9 @@ object Phase4 extends Phase {
     if (helperMethods.checkSize(cards, 7)) return helperMethods.checkRow(cards, 7)
     return false
   }
-}
+} 
+
+
 
 object Phase5 extends Phase {
   override def checkPhaseSize(cards: List[ICard]) : Boolean = {

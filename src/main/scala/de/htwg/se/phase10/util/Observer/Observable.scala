@@ -9,4 +9,5 @@ class Observable extends IObservable {
   def removeAllObservers = subscribers = subscribers.drop(subscribers.size)
   def notifyObservers = notifyObservers(null)
   def notifyObservers(e:Event) = subscribers.foreach { o => o.update(e) }
-}
+} 
+

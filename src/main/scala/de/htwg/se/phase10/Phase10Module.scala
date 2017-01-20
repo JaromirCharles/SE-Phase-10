@@ -20,3 +20,4 @@ class Phase10Module extends AbstractModule with ScalaModule{
     bind[IPlayerList].to[PlayerList]
   }
 }
+
